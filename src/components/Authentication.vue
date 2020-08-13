@@ -1,15 +1,17 @@
 <template>
-    <v-container grid-list-md>
-        <v-layout row wrap class="mt-12">
-            <v-flex xs12 md6>
-                <v-btn outlined block class="primary">For Image</v-btn>
+    <v-container grid-list-md class="pop">
+        <v-card color="#760D11">
+        <v-layout row wrap class="mt-5">
+            <v-flex xs12 md6 class="pt-12">
+                    <v-img src="../assets/pps-logo.png" class="mx-auto mt-12" width="200"></v-img>
+                    <h1 class="text-center mt-3 below-img">pps.org.ph</h1>
             </v-flex>
             <v-flex xs12 md6>
-                <v-card class="mx-auto" max-width="500">
+                <v-card class="mx-auto rounded-xl mt-3 mb-3" max-width="500">
                     <v-card-title class="pt-12">
-                        <v-btn text color="red accent-4" @click="registration = true" :class="{'ifSelected' : registration == true}"> <h3>Register</h3>  </v-btn>
+                        <v-btn text color="red accent-4" @click="registration = true" class="ml-6" :class="{'ifSelected' : registration == true}"> <h3>Register</h3> </v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn text color="red accent-4" @click="registration = false" :class="{'ifSelected' : registration == false}"> <h3>Login</h3> </v-btn>
+                        <v-btn text color="red accent-4" @click="registration = false" class="mr-5" :class="{'ifSelected' : registration == false}"> <h3>Login</h3> </v-btn>
                     </v-card-title>
                     <v-card-text class="mt-8 pl-12 pr-12">
                         <div v-if="registration">
@@ -34,12 +36,20 @@
                 </v-card>
             </v-flex>
         </v-layout>
+        </v-card>
     </v-container>
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+.pop{
+    font-family: 'Poppins', sans-serif;
+}
 .ifSelected{
     border-bottom: 1px solid #D50000;
+}
+.below-img{
+    color:white;
 }
 </style>
 
@@ -99,7 +109,14 @@ export default {
                     email: this.login_data.email,
                     password: this.login_data.password
                 }).then(response => {
-                    console.log('login success')
+                    axios.get('api/user').then(response =>{
+                        let user_type = response.data.user_type
+                        if(user_type == 1){
+                            this.$router.push({ name: 'User' })
+                        }else{
+                            this.$router.push({ name: 'Admin' })
+                        }
+                    })
                 })
             });
         }
