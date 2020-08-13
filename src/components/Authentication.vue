@@ -1,6 +1,6 @@
 <template>
     <v-container grid-list-md>
-        <v-layout row wrap class="mt-6">
+        <v-layout row wrap class="mt-12">
             <v-flex xs12 md6>
                 <v-btn outlined block class="primary">For Image</v-btn>
             </v-flex>
@@ -44,6 +44,11 @@
 </style>
 
 <script>
+import axios from 'axios'
+
+axios.defaults.withCredentials = true
+axios.defaults.baseURL = 'http://localhost:8000'
+
 export default {
     data(){
         return{
@@ -71,14 +76,32 @@ export default {
     },
     methods:{
         register(){
-            console.log(this.register_data.first_name)
-            console.log(this.register_data.surname)
-            console.log(this.register_data.password)
-            console.log(this.register_data.email)
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post('/register',{
+                    first_name: this.register_data.first_name,
+                    last_name: this.register_data.surname,
+                    email: this.register_data.email,
+                    password: this.register_data.password,
+                    password_confirmation:this.register_data.password,
+                    user_type: 1
+                }).then(response => {
+                    this.$router.push({ name: 'User' })
+                }).catch(err => {
+                    console.log('database error')
+                })
+            }).catch(err => {
+                console.log('sanctum error')
+            })
         },
         login(){
-            console.log(this.login_data.email)
-            console.log(this.login_data.password)
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post('/login',{
+                    email: this.login_data.email,
+                    password: this.login_data.password
+                }).then(response => {
+                    console.log('login success')
+                })
+            });
         }
     }
 }
