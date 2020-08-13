@@ -4,7 +4,7 @@
         <v-layout row wrap class="mt-5">
             <v-flex xs12 md6 class="pt-12">
                     <v-img src="../assets/pps-logo.png" class="mx-auto mt-12" width="200"></v-img>
-                    <h1 class="text-center mt-3 below-img">pps.org.ph</h1>
+                    <a href="https://pps.org.ph/"><h1 class="text-center mt-3 below-img">pps.org.ph</h1></a>
             </v-flex>
             <v-flex xs12 md6>
                 <v-card class="mx-auto rounded-xl mt-3 mb-3" max-width="500">
@@ -51,6 +51,10 @@
 .below-img{
     color:white;
 }
+a{
+    text-decoration: none;
+}
+
 </style>
 
 <script>
