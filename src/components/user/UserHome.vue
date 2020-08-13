@@ -1,21 +1,20 @@
 <template>
     <v-container class="pop">
-        <v-layout row wrap justify-center>
-            <v-flex xs12 md6 class="mt-12 pt-12">
-                <div>
-                    <h3>User Side</h3>
-                </div>
-                <v-card>
-                    <v-card-title class="justify-center pt-6">
-                        <h1>Welcome</h1> 
-                    </v-card-title>
-                    <v-card-subtitle class="text-center">
-                         <h2> {{userData.first_name}} {{userData.last_name}} </h2> 
-                    </v-card-subtitle>
-                    <v-card-actions class="justify-center mt-3">
-                         <v-btn v-on:click="logout" class="pl-12 pr-12 mb-5 primary red accent-4"> Logout </v-btn>
-                    </v-card-actions>
-                </v-card>
+        <h3 class="text-center mt-5">User side</h3>
+        <v-img src="../../assets/pps-logo.png" class="mx-auto mt-5" width="150"></v-img>
+        <v-layout justify-center>            
+            <v-flex xs12 md6>
+                 <v-card class="mx-auto rounded-xl mt-3 mb-3" color="#760D11" max-width="500">
+                     <v-card-title class="justify-center pt-6">
+                            <h2 class="white--text">Welcome</h2> 
+                        </v-card-title>
+                        <v-card-body class="text-center">
+                            <h1 class="white--text"> {{userData.first_name}} {{userData.last_name}} </h1> 
+                        </v-card-body>
+                        <v-card-actions class="justify-center mt-3">
+                            <v-btn v-on:click="logout" class="pl-12 pr-12 mb-5 primary red accent-4"> Logout </v-btn>
+                        </v-card-actions>
+                 </v-card>
             </v-flex>
         </v-layout>
     </v-container>

@@ -1,6 +1,6 @@
 <template>
     <v-container grid-list-md class="pop">
-        <v-card color="#760D11">
+        <v-card color="#760D11" height="600">
         <v-layout row wrap class="mt-5">
             <v-flex xs12 md6 class="pt-12">
                     <v-img src="../assets/pps-logo.png" class="mx-auto mt-12" width="200"></v-img>
