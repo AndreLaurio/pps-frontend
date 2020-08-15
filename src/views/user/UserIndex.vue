@@ -1,11 +1,16 @@
 <template>
     <div>
         <UserHome/>
+            <v-content>
+                <UserDashboard/>
+            </v-content>
     </div>
 </template>
 
 <script>
 import UserHome from '@/components/user/UserHome'
+import UserDashboard from '@/components/user/UserDashboard'
+
 export default {
     data(){
         return{
@@ -13,7 +18,7 @@ export default {
         }
     },
     components:{
-        UserHome
+        UserHome, UserDashboard
     }
 }
 </script>
