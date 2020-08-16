@@ -15,9 +15,10 @@
                     </v-card-title>
                     <v-card-text class="mt-8 pl-12 pr-12">
                         <div v-if="registration">
-                            <v-text-field v-model="register_data.first_name" label="First Name" outlined :counter="15"></v-text-field>
-                            <v-text-field v-model="register_data.surname" label="Surname" outlined :counter="15"></v-text-field>
+                            <v-text-field v-model="register_data.first_name" label="First Name" outlined :counter="15" :rules="fRules"></v-text-field>
+                            <v-text-field v-model="register_data.surname" label="Surname" outlined :counter="15" :rules="sRules" required></v-text-field>
                             <v-text-field v-model="register_data.email" label="Email" outlined :rules="emailRules" :counter="30" required></v-text-field>
+                            <span class="pb-3">{{validationErrors}}</span>
                             <v-text-field v-model="register_data.password" label="Password" outlined :rules="[rules.required, rules.min]" counter hint="At least 8 characters" :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'" :type="show_password ? 'text' : 'password'" @click:append="show_password = !show_password" required></v-text-field>
                         </div>
                         <div v-else>
@@ -70,7 +71,7 @@ export default {
                 first_name:'',
                 surname:'',
                 email:'',
-                password:''
+                password:'',
             },
             login_data:{
                 email:'',
@@ -80,12 +81,19 @@ export default {
                 v => !!v || 'E-mail is required',
                 v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
             ],
+            fRules:[
+                v => !!v || 'First name is required',
+            ],
+            sRules:[
+                v => !!v || 'Surname is required',
+            ],
             rules: {
                 required: value => !!value || 'Required.',
                 min: v => v.length >= 8 || 'Min 8 characters',
             },
             show_password: false,
-            registration:true
+            registration:true,
+            validationErrors:''
         }
     },
     methods:{
@@ -101,7 +109,9 @@ export default {
                 }).then(response => {
                     this.$router.push({ name: 'User' })
                 }).catch(err => {
-                    console.log('database error')
+                    // this.validationErrors = err.response.data.errors
+                    //not fixed so alternative way
+                    this.validationErrors = 'The Email is already taken.'
                 })
             }).catch(err => {
                 console.log('sanctum error')

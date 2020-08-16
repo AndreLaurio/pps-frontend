@@ -3,7 +3,7 @@
         <v-navigation-drawer v-model="drawer" app color="grey lighten-5">
             <v-list dense>
                  <v-list>
-                    <v-list-item-content>
+                    <v-list-item-content color="#760D11">
                         <v-avatar>
                             <img src="https://cdn.vuetifyjs.com/images/john.jpg" width="100px" height="100px">
                         </v-avatar>
@@ -12,31 +12,53 @@
                         </div>
                     </v-list-item-content>
                 </v-list> 
+                <v-list-item link>
+                    <v-list-item-action>
+                        <v-icon color="#760D11">mdi-home</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        Home
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link v-on:click="createExam">
+                    <v-list-item-action>
+                        <v-icon color="#760D11">mdi-clipboard-text-multiple</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        Examinations
+                    </v-list-item-content>
+                </v-list-item>
+                 <v-list-item link v-on:click="createExam">
+                    <v-list-item-action>
+                        <v-icon color="#760D11">mdi-account-supervisor</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        Examinees
+                    </v-list-item-content>
+                </v-list-item>
                 <v-list-item link v-on:click="createUser">
                     <v-list-item-action>
-                        <v-icon>mdi-account-plus</v-icon>
+                        <v-icon color="#760D11">mdi-account-plus</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
                         Create User
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link v-on:click="createExam">
+                <v-list-item link v-on:click="logout">
                     <v-list-item-action>
-                        <v-icon>mdi-home</v-icon>
+                        <v-icon color="#760D11">mdi-logout</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
-                        Create Exam
+                        Logout
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>
 
         <v-app-bar app color="#760D11" dark>
-            <v-app-bar-nav-icon class="ml-3 mr-3" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon class="mr-3" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <img src="../../assets/pps-logo.png" class="mr-3" width="40px" height="40px">
             <v-toolbar-title>Philippine Pediatric Society</v-toolbar-title>
-            <v-spacer></v-spacer>
-            
         </v-app-bar>
     </nav>
 </template>
@@ -79,6 +101,11 @@ export default {
         },
         createExam(){
             this.$router.push({ name: 'Admin' })
+        },
+        logout(){
+            axios.post('/logout').then(response => {
+                this.$router.push({ name: 'Home' })
+            })
         }
     }
 }
