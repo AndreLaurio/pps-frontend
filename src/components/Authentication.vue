@@ -65,7 +65,7 @@ a{
 import axios from 'axios'
 
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.baseURL = 'http://apis.pps-demo.ml'
 
 export default {
     data(){
@@ -127,7 +127,7 @@ export default {
                     email: this.login_data.email,
                     password: this.login_data.password
                 }).then(response => {
-                    axios.get('api/user').then(response =>{
+                    axios.get('/api/user').then(response =>{
                         let user_type = response.data.user_type
                         if(user_type == 1){
                             this.$router.push({ name: 'User' })
@@ -138,7 +138,7 @@ export default {
                 }).catch(err => {
                     this.loginValidation = 'The Email/Password is incorrect.'
                 })
-            });
+            }).catch(err => {console.log(err)})
         }
     }
 }

@@ -20,7 +20,7 @@
                         Home
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link v-on:click="createExam">
+                <v-list-item link>
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-clipboard-text-multiple</v-icon>
                     </v-list-item-action>
@@ -28,7 +28,7 @@
                         Examinations
                     </v-list-item-content>
                 </v-list-item>
-                 <v-list-item link v-on:click="createExam">
+                 <v-list-item link>
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-account-supervisor</v-icon>
                     </v-list-item-action>
@@ -74,7 +74,7 @@
 import axios from 'axios'
 
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.baseURL = 'http://apis.pps-demo.ml'
 
 export default {
     data(){
@@ -91,7 +91,7 @@ export default {
     },
     methods:{
         getUserData(){
-            axios.get('api/user').then(response =>{
+            axios.get('/api/user').then(response =>{
                 this.userData.first_name = response.data.first_name,
                 this.userData.last_name = response.data.last_name
             })

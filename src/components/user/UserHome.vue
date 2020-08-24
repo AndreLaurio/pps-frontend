@@ -31,7 +31,7 @@
 import axios from 'axios'
 
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.baseURL = 'http://apis.pps-demo.ml'
 
 export default {
     data(){
@@ -50,7 +50,7 @@ export default {
 
     methods:{
         getUserData(){
-            axios.get('api/user').then(response =>{
+            axios.get('/api/user').then(response =>{
                 this.userData.user_id = response.data.id,
                 this.userData.first_name = response.data.first_name,
                 this.userData.last_name = response.data.last_name
