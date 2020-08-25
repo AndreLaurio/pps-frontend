@@ -25,9 +25,9 @@
                 </v-card>
             </v-flex>
         </v-layout>
-        <v-content>
+        <v-main>
             <AdminDashboard/>
-        </v-content>
+        </v-main>
     </div>
 </template>
 

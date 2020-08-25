@@ -1,9 +1,9 @@
 <template>
     <div>
         <AdminHome/>
-            <v-content>
+            <v-main>
                 <AdminDashboard/>
-            </v-content>
+            </v-main>
     </div>
 </template>
 

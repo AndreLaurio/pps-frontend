@@ -1,9 +1,9 @@
 <template>
     <div>
         <UserHome/>
-            <v-content>
+            <v-main>
                 <UserDashboard/>
-            </v-content>
+            </v-main>
     </div>
 </template>
 
