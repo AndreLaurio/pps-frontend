@@ -74,7 +74,7 @@
 import axios from 'axios'
 
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://apis.pps-demo.ml'
+axios.defaults.baseURL = 'http://localhost:8000'
 
 export default {
     data(){
@@ -83,7 +83,7 @@ export default {
                 first_name:'',
                 last_name:''
             },
-            drawer: false,
+            drawer: true,
         }
     },
     mounted(){
