@@ -1,12 +1,12 @@
 <template>
-    <v-container grid-list-md class="pop">
-        <v-card color="#760D11" height="600">
+    <v-container class="pop">
+        <v-card color="#760D11" height="600" width="1200" class="rounded-xl mx-auto">
         <v-layout row wrap class="mt-5">
-            <v-flex xs12 md6 class="pt-12">
+            <v-flex xs12 sm12 md6 xl6 class="pt-12">
                     <v-img src="../assets/pps-logo.png" class="mx-auto mt-12" width="200"></v-img>
                     <a href="https://pps.org.ph/"><h1 class="text-center mt-3 below-img">pps.org.ph</h1></a>
             </v-flex>
-            <v-flex xs12 md6>
+            <v-flex xs12 sm12 md6 xl6>
                 <v-card class="mx-auto rounded-xl mt-3 mb-3" max-width="500">
                     <v-card-title class="pt-12">
                         <v-btn text color="red accent-4" @click="registration = true" class="ml-6" :class="{'ifSelected' : registration == true}"> <h3>Register</h3> </v-btn>

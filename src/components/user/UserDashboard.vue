@@ -20,7 +20,7 @@
                         Home
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link>
+                <v-list-item link v-on:click="userProfile">
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-face</v-icon>
                     </v-list-item-action>
@@ -28,7 +28,7 @@
                         Profile
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link>
+                <v-list-item link v-on:click="userExamination">
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-clipboard-text-multiple</v-icon>
                     </v-list-item-action>
@@ -92,6 +92,12 @@ export default {
             axios.post('/logout').then(response => {
                 this.$router.push({ name: 'Home' })
             })
+        },
+        userExamination(){
+            this.$router.push({ name: 'UserExamination' })
+        },
+        userProfile(){
+            this.$router.push({ name: 'UserProfile' })
         }
     }
 }
