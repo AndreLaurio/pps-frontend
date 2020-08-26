@@ -4,7 +4,7 @@
             <v-flex xs12 md6>
                 <v-card class="mx-auto rounded-xl mb-3 mt-5" max-width="500">
                     <v-card-title>
-                        <h3 class="fcolor">Create Users</h3>
+                        <h3 class="fcolor mt-5 ml-5">Create Users</h3>
                     </v-card-title>
                     <v-card-text class="pl-12 pr-12">
                         <div class="valsuccess">{{register_validation_success}}</div>
@@ -20,7 +20,7 @@
                         <v-text-field v-model="register_data.password" label="Password" outlined :rules="[rules.required, rules.min]" counter hint="At least 8 characters" :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'" :type="show_password ? 'text' : 'password'" @click:append="show_password = !show_password" required></v-text-field>
                     </v-card-text>
                     <v-card-actions class="justify-center">
-                        <v-btn v-on:click="register" class="pl-12 pr-12 mb-5 primary red accent-4"> Register</v-btn>
+                        <v-btn v-on:click="register" class="pl-12 pr-12 mb-8 primary red accent-4"> Create</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>

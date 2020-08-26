@@ -111,7 +111,9 @@ export default {
                     password_confirmation:this.register_data.password,
                     user_type: 1
                 }).then(response => {
-                    this.$router.push({ name: 'User' })
+                    //show pending for approval
+                    console.log('success')
+                    //auto login when registred successfully  this.$router.push({ name: 'User' })
                 }).catch(err => {
                     // this.validationErrors = err.response.data.errors
                     //not fixed so alternative way
@@ -128,11 +130,18 @@ export default {
                     password: this.login_data.password
                 }).then(response => {
                     axios.get('/api/user').then(response =>{
+                        let is_approved = response.data.is_approved
                         let user_type = response.data.user_type
-                        if(user_type == 1){
-                            this.$router.push({ name: 'User' })
+                        if(is_approved == 1){
+                            if(user_type == 1){
+                                this.$router.push({ name: 'User' })
+                            } else if(user_type == 2){
+                                this.$router.push({ name: 'Admin' })
+                            } else if(user_type == 3){
+                                // Super Admin
+                            }
                         }else{
-                            this.$router.push({ name: 'Admin' })
+                            console.log('waiting for approval')
                         }
                     })
                 }).catch(err => {
