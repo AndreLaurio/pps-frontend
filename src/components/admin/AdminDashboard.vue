@@ -36,6 +36,14 @@
                         Examinees
                     </v-list-item-content>
                 </v-list-item>
+                <v-list-item link v-on:click="accountApproval">
+                    <v-list-item-action>
+                        <v-icon color="#760D11">mdi-account-supervisor-circle-outline</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        Account Approval
+                    </v-list-item-content>
+                </v-list-item>
                 <v-list-item link v-on:click="createUser">
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-account-plus</v-icon>
@@ -101,6 +109,9 @@ export default {
         },
         createExam(){
             this.$router.push({ name: 'Admin' })
+        },
+        accountApproval(){
+            this.$router.push({ name: 'AdminAccountApproval' })
         },
         logout(){
             axios.post('/logout').then(response => {

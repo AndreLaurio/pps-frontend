@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pop">
         <v-layout justify-center>
             <v-flex xs12 md6>
                 <v-card class="mx-auto rounded-xl mb-3 mt-5" max-width="500">

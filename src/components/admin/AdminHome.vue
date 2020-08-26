@@ -8,9 +8,9 @@
                      <v-card-title class="justify-center pt-6">
                             <h2 class="white--text">Welcome</h2> 
                         </v-card-title>
-                        <v-card-body class="text-center">
+                        <v-card-text class="text-center">
                             <h1 class="white--text"> {{userData.first_name}} {{userData.last_name}} </h1> 
-                        </v-card-body>
+                        </v-card-text>
                         <v-card-actions class="justify-center mt-3">
                             <v-btn v-on:click="logout" class="mb-5 primary red accent-4"> Create User </v-btn>
                             <v-btn v-on:click="logout" class="mb-5 primary red accent-4"> Create Exam </v-btn>
