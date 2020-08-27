@@ -29,7 +29,7 @@
                     </v-card-text>
                     <v-card-actions class="justify-center">
                         <div v-if="registration">
-                            <v-btn v-on:click="register" class="pl-12 pr-12 mb-5 primary red accent-4"> Register</v-btn>
+                            <v-btn v-on:click="register" @click.stop="modalWaiting = true" class="pl-12 pr-12 mb-5 primary red accent-4"> Register</v-btn>
                         </div>
                         <div v-else>
                             <v-btn v-on:click="login" class="pl-12 pr-12 mb-5 primary red accent-4"> Login </v-btn>
@@ -39,6 +39,16 @@
             </v-flex>
         </v-layout>
         </v-card>
+
+        <!-- dialog for waiting approval -->
+        <v-dialog v-model="modalWaiting">
+            <v-card>
+                <v-card-title class="headline"> Test </v-card-title>
+                <v-card-text>
+                    
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -97,7 +107,8 @@ export default {
             show_password: false,
             registration:true,
             registerValidation:'',
-            loginValidation:''
+            loginValidation:'',
+            modalWaiting: false,
         }
     },
     methods:{
@@ -112,7 +123,7 @@ export default {
                     user_type: 1
                 }).then(response => {
                     //show pending for approval
-                    console.log('success')
+                    this.modalWaiting = true
                     //auto login when registred successfully  this.$router.push({ name: 'User' })
                 }).catch(err => {
                     // this.validationErrors = err.response.data.errors
@@ -148,6 +159,12 @@ export default {
                     this.loginValidation = 'The Email/Password is incorrect.'
                 })
             }).catch(err => {console.log(err)})
+        },
+        refreshCookies(){
+            axios.post('/logout').then(response => {
+                // this.$router.push({ name: 'Home' })
+                console.log('cookies removed')
+            })
         }
     }
 }
