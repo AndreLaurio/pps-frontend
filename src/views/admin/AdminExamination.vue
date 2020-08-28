@@ -7,14 +7,14 @@
         </v-layout>
         <v-layout row wrap class="ml-12 mt-5">
             <v-flex>
-                <v-text-field dense solo rounded label="Search"></v-text-field>
+                <v-text-field prepend-inner-icon="mdi-magnify" rounded solo label="Search Exam"></v-text-field>
             </v-flex>
             <v-flex class="ml-12">
-                <v-btn color="#760D11" small dark rounded> <v-icon size="17" class="pr-1">mdi-plus-thick</v-icon> Create Exam </v-btn>    
+                <v-btn color="#760D11" dark rounded> <v-icon size="17" class="pr-1">mdi-plus-thick</v-icon> Create Exam </v-btn>    
             </v-flex>
         </v-layout>
         <v-layout row wrap class="mt-5">
-            <v-flex xs12 sm12 md10 xl8>
+            <v-flex xs12 sm12 md10 xl7>
                 <v-expansion-panels accordion>
                     <v-expansion-panel>
                         <v-expansion-panel-header>
@@ -38,6 +38,7 @@
 .pop{
     font-family: 'Poppins', sans-serif;
 }
+
 </style>
 
 <script>
