@@ -14,20 +14,43 @@
                 </v-list> 
                 <v-list-item link>
                     <v-list-item-action>
-                        <v-icon>mdi-home</v-icon>
+                        <v-icon color="#760D11">mdi-home</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
                         Home
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link v-on:click="userProfile">
+                    <v-list-item-action>
+                        <v-icon color="#760D11">mdi-face</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        Profile
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link v-on:click="userExamination">
+                    <v-list-item-action>
+                        <v-icon color="#760D11">mdi-clipboard-text-multiple</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        Examination
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link v-on:click="logout">
+                    <v-list-item-action>
+                        <v-icon color="#760D11">mdi-logout</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        Logout
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>
 
         <v-app-bar app color="#760D11" dark>
-            <v-app-bar-nav-icon class="ml-3" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <img src="../../assets/pps-logo.png" class="mr-5" width="40px" height="40px">
             <v-toolbar-title>Philippine Pediatric Society</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <img src="../../assets/pps-logo.png" class="mr-5" width="50px" height="50px">
         </v-app-bar>
     </nav>
 </template>
@@ -52,7 +75,7 @@ export default {
                 first_name:'',
                 last_name:''
             },
-            drawer: false,
+            drawer: true,
         }
     },
     mounted(){
@@ -60,10 +83,21 @@ export default {
     },
     methods:{
         getUserData(){
-            axios.get('api/user').then(response =>{
+            axios.get('/api/user').then(response =>{
                 this.userData.first_name = response.data.first_name,
                 this.userData.last_name = response.data.last_name
             })
+        },
+        logout(){
+            axios.post('/logout').then(response => {
+                this.$router.push({ name: 'Home' })
+            })
+        },
+        userExamination(){
+            this.$router.push({ name: 'UserExamination' })
+        },
+        userProfile(){
+            this.$router.push({ name: 'UserProfile' })
         }
     }
 }

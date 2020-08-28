@@ -8,9 +8,9 @@
                      <v-card-title class="justify-center pt-6">
                             <h2 class="white--text">Welcome</h2> 
                         </v-card-title>
-                        <v-card-body class="text-center">
+                        <v-card-text class="text-center">
                             <h1 class="white--text"> {{userData.first_name}} {{userData.last_name}} </h1> 
-                        </v-card-body>
+                        </v-card-text>
                         <v-card-actions class="justify-center mt-3">
                             <v-btn v-on:click="logout" class="pl-12 pr-12 mb-5 primary red accent-4"> Logout </v-btn>
                         </v-card-actions>
@@ -50,7 +50,7 @@ export default {
 
     methods:{
         getUserData(){
-            axios.get('api/user').then(response =>{
+            axios.get('/api/user').then(response =>{
                 this.userData.user_id = response.data.id,
                 this.userData.first_name = response.data.first_name,
                 this.userData.last_name = response.data.last_name

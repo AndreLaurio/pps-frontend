@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UserHome/>
+        <h1>User Examination</h1>
             <v-main>
                 <UserDashboard/>
             </v-main>
@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import UserHome from '@/components/user/UserHome'
 import UserDashboard from '@/components/user/UserDashboard'
 
 export default {
@@ -18,7 +17,7 @@ export default {
         }
     },
     components:{
-        UserHome, UserDashboard
+        UserDashboard
     }
 }
 </script>
