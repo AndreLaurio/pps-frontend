@@ -1,7 +1,7 @@
 <template>
     <div class="pop">
         <h1 class="mt-12 ml-12">Account Approval</h1>
-        <v-layout class="ml-12" justify-center>
+        <v-layout justify-center>
             <v-flex xs12 sm12 xl10 md10>
                 <div class="mt-12">
                     <v-alert v-model="approvedSuccess" transition="fade-transition" type="success">
@@ -13,7 +13,7 @@
                     <v-data-table
                         :headers="pendingAccountHeaders"
                         :items="pendingAccount"
-                        class="elevation-1 pl-5"
+                        class="elevation-1"
                     >
                         <template v-slot:item="row">
                             <tr>
