@@ -2,7 +2,7 @@
     <div class="pop">
         <v-layout justify-center>
             <v-flex xs12 md6>
-                <v-card class="mx-auto rounded-xl mb-3 mt-5" max-width="500">
+                <v-card class="mx-auto rounded-xl mt-5" max-width="500">
                     <v-card-title>
                         <h3 class="fcolor mt-5 ml-5">Create Users</h3>
                     </v-card-title>

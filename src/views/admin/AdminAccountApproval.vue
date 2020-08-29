@@ -1,9 +1,9 @@
 <template>
     <div class="pop">
-        <h1 class="mt-12 ml-12">Account Approval</h1>
+        <h2 class="mt-12 ml-12">Account Approval</h2>
         <v-layout justify-center>
             <v-flex xs12 sm12 xl10 md10>
-                <div class="mt-12">
+                <div class="mt-6">
                     <v-alert v-model="approvedSuccess" transition="fade-transition" type="success">
                         Approved Successfully!
                     </v-alert>
@@ -30,37 +30,12 @@
                                     {{row.item.created_at}}
                                 </td>
                                 <td class="text-center">
-                                    <v-btn class="mx-2 success" small v-on:click="acceptAccount(row.item.id)"><v-icon>mdi-check-bold</v-icon></v-btn>
+                                    <v-btn class="mx-2 success" small v-on:click="acceptAccount(row.item, row.item.id)"><v-icon>mdi-check-bold</v-icon></v-btn>
                                     <v-btn class="mx-2 error" small v-on:click="rejectAccount(row.item.id)"><v-icon>mdi-delete</v-icon></v-btn>
                                 </td>
                             </tr>
                         </template>
                     </v-data-table>
-                    <!-- <v-simple-table>
-                        <template v-slot:default>
-                            <thead>
-                                <tr>
-                                    <th class="text-center">First Name</th>
-                                    <th class="text-center">Last Name</th>
-                                    <th class="text-center">Email</th>
-                                    <th class="text-center">Registered Date</th>
-                                    <th class="text-center">Control</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="pAccount in pendingAccount" :key="pAccount.id">
-                                    <td class="text-center">{{ pAccount.first_name }}</td>
-                                    <td class="text-center">{{ pAccount.last_name }}</td>
-                                    <td class="text-center">{{ pAccount.email }}</td>
-                                    <td class="text-center">{{ pAccount.created_at.slice(0,10)}}</td>
-                                    <td class="text-center">
-                                       <v-btn class="mx-2 success" small v-on:click="acceptAccount(pAccount.id)"><v-icon>mdi-check-bold</v-icon></v-btn>
-                                       <v-btn class="mx-2 error" small v-on:click="rejectAccount(pAccount.id)"><v-icon>mdi-delete</v-icon></v-btn>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </template>
-                    </v-simple-table> -->
                 </div>
             </v-flex>
         </v-layout>
@@ -119,11 +94,15 @@ export default {
                 // console.log(response.data)
             })
         },
-        acceptAccount(id){
+        acceptAccount(account,id){
             axios.put(`/api/accounts/${id}`,{
                 is_approved: 1,
                 approved_by: this.userId
             }).then(response => {
+                //removing the account in the list when clicked
+                var index = this.pendingAccount.indexOf(account)
+                this.pendingAccount.splice(index, 1)
+                //showing alerts
                 this.approvedSuccess = true
                 this.rejectedSuccess = false
             }).catch(error => { 
