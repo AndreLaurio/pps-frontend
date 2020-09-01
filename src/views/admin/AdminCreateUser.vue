@@ -15,12 +15,18 @@
                         </v-radio-group>
                         <v-text-field v-model="register_data.first_name" :counter="15" outlined label="First Name"></v-text-field>
                         <v-text-field v-model="register_data.surname" :counter="15" outlined label="Surname"></v-text-field>
-                        <div class="ml-12 pl-12 valerror">{{register_validation_failed}}</div>
                         <v-text-field v-model="register_data.email" label="Email" outlined :rules="emailRules" :counter="30" required></v-text-field>
-                        <v-text-field v-model="register_data.password" label="Password" outlined :rules="[rules.required, rules.min]" counter hint="At least 8 characters" :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'" :type="show_password ? 'text' : 'password'" @click:append="show_password = !show_password" required></v-text-field>
+                        <v-text-field v-model="register_data.password"  v-on:keyup.enter="register" label="Password" outlined :rules="[rules.required, rules.min]" counter hint="At least 8 characters" :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'" :type="show_password ? 'text' : 'password'" @click:append="show_password = !show_password" required></v-text-field>
+                        <div class="valerror text-center">
+                            <ul>
+                                <li v-for="err in register_validation_failed" :key="err.id">
+                                    {{err}}
+                                </li>   
+                            </ul>
+                        </div>
                     </v-card-text>
                     <v-card-actions class="justify-center">
-                        <v-btn v-on:click="register" class="pl-12 pr-12 mb-8 primary red accent-4"> Create</v-btn>
+                        <v-btn v-on:click="register" :loading="registerLoading" class="pl-12 pr-12 mb-8 primary red accent-4"> Create</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>
@@ -44,6 +50,9 @@
 }
 .valsuccess{
     color: green;
+}
+ul{
+    list-style-type: none;
 }
 </style>
 
@@ -74,7 +83,8 @@ export default {
             },
             show_password: false,
             register_validation_success:'',
-            register_validation_failed:''
+            register_validation_failed:[],
+            registerLoading:false
         }
     },
     components:{
@@ -82,6 +92,7 @@ export default {
     },
     methods:{
         register(){
+            this.registerLoading = true
             axios.post('/register',{
                 first_name: this.register_data.first_name,
                 last_name: this.register_data.surname,
@@ -90,15 +101,18 @@ export default {
                 password_confirmation: this.register_data.password,
                 user_type: this.register_data.user_type
             }).then(response => {
-                this.register_data.first_name = '',
-                this.register_data.last_name = '',
-                this.register_data.email = '',
-                this.register_data.password = '',
-                this.register_data.password_confirmation = '',
+                this.registerLoading = false
+                this.register_data.first_name = ''
+                this.register_data.surname = ''
+                this.register_data.email = ''
+                this.register_data.password = ''
                 this.register_data.password_confirmation = ''
                 this.register_validation_success = 'The user is successfully added.'
-            }).catch(err => {
-                this.register_validation_failed = 'The Email is already taken.'
+            }).catch(error => {
+                this.registerLoading = false
+                let valErr = Object.values(error.response.data.errors)
+                valErr = valErr.flat()
+                this.register_validation_failed = valErr
             })
         }
     }

@@ -2,7 +2,7 @@
     <div class="pop ml-12 mt-12">
         <v-layout row wrap>
             <v-flex>
-                <h1>Examinations</h1>
+                <h2>Examinations</h2>
             </v-flex>
         </v-layout>
         <v-layout row wrap class="ml-12 mt-5">
