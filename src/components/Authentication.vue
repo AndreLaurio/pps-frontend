@@ -39,7 +39,7 @@
                 <div v-if="registrationSuccess == true" class="mt-12 pt-12 regsuccess">
                     <h1>Account Successfully Created !</h1>
                     <div class="mt-5">
-                        <h2>Dear {{dearName}},</h2> 
+                        <h2>Dear {{register_data.first_name}},</h2> 
                     </div>
                     <div class="mt-5">
                         <p> <span class="ml-5">Please wait for the approval of your request.</span> <br>
@@ -144,7 +144,7 @@ export default {
                     this.registrationSuccess = true
                     //auto login when registred successfully  this.$router.push({ name: 'User' })
                 }).catch(err => {
-                    this.validationErrors = err.response.data.errors
+                    //this.validationErrors = err.response.data.errors
                     // not fixed so alternative way
                     this.registerValidation = 'The Email is already taken.'
                 })
@@ -179,14 +179,10 @@ export default {
             }).catch(err => {console.log(err)})
         },
         returnIndex(){
-            window.location.reload()
-        },
-        refreshCookies(){
-            axios.post('/logout').then(response => {
-                // this.$router.push({ name: 'Home' })
-                console.log('cookies removed')
+             axios.post('/logout').then(response => {
+                window.location.reload()
             })
-        }
+        },
     }
 }
 </script>
