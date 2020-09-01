@@ -7,7 +7,7 @@
                     <a href="https://pps.org.ph/"><h1 class="text-center mt-3 below-img">pps.org.ph</h1></a>
             </v-flex>
             <v-flex xs12 sm12 md6 xl6>
-                <v-card class="mx-auto rounded-xl mt-3 mb-3" max-width="500">
+                <v-card class="mx-auto rounded-xl mt-3 mb-3" v-if="registrationSuccess == false" max-width="500">
                     <v-card-title class="pt-12">
                         <v-btn text color="red accent-4" @click="registration = true" class="ml-6" :class="{'ifSelected' : registration == true}"> <h3>Register</h3> </v-btn>
                         <v-spacer></v-spacer>
@@ -29,26 +29,38 @@
                     </v-card-text>
                     <v-card-actions class="justify-center">
                         <div v-if="registration">
-                            <v-btn v-on:click="register" @click.stop="modalWaiting = true" class="pl-12 pr-12 mb-5 primary red accent-4"> Register</v-btn>
+                            <v-btn v-on:click="register" class="pl-12 pr-12 mb-5 primary red accent-4"> Register</v-btn>
                         </div>
                         <div v-else>
                             <v-btn v-on:click="login" class="pl-12 pr-12 mb-5 primary red accent-4"> Login </v-btn>
                         </div>
                     </v-card-actions>
                 </v-card>
+                <div v-if="registrationSuccess == true" class="mt-12 pt-12 regsuccess">
+                    <h1>Account Successfully Created !</h1>
+                    <div class="mt-5">
+                        <h2>Dear {{dearName}},</h2> 
+                    </div>
+                    <div class="mt-5">
+                        <p> <span class="ml-5">Please wait for the approval of your request.</span> <br>
+                        It might take 1-2 days to verify your account. <br>
+                        This is to guarantee that all sellers are credible.
+                        </p>
+                    </div>
+                    <div class="mt-5">
+                        Thank you,
+                         <h4>Administrator</h4>
+                    </div>
+                    <div>
+                        <v-btn class="pl-12 pr-12 mt-5 primary" v-on:click="returnIndex"> Home </v-btn>
+                    </div>
+                </div>
             </v-flex>
         </v-layout>
         </v-card>
 
-        <!-- dialog for waiting approval -->
-        <v-dialog v-model="modalWaiting">
-            <v-card>
-                <v-card-title class="headline"> Test </v-card-title>
-                <v-card-text>
-                    
-                </v-card-text>
-            </v-card>
-        </v-dialog>
+        <!-- change for waiting approval -->
+     
     </v-container>
 </template>
 
@@ -68,6 +80,12 @@ a{
 }
 .valerror{
     color:red;
+}
+.valsuccess{
+    color: green;
+}
+.regsuccess{
+    color: white;
 }
 </style>
 
@@ -108,7 +126,7 @@ export default {
             registration:true,
             registerValidation:'',
             loginValidation:'',
-            modalWaiting: false,
+            registrationSuccess:false
         }
     },
     methods:{
@@ -123,11 +141,11 @@ export default {
                     user_type: 1
                 }).then(response => {
                     //show pending for approval
-                    this.modalWaiting = true
+                    this.registrationSuccess = true
                     //auto login when registred successfully  this.$router.push({ name: 'User' })
                 }).catch(err => {
-                    // this.validationErrors = err.response.data.errors
-                    //not fixed so alternative way
+                    this.validationErrors = err.response.data.errors
+                    // not fixed so alternative way
                     this.registerValidation = 'The Email is already taken.'
                 })
             }).catch(err => {
@@ -159,6 +177,9 @@ export default {
                     this.loginValidation = 'The Email/Password is incorrect.'
                 })
             }).catch(err => {console.log(err)})
+        },
+        returnIndex(){
+            window.location.reload()
         },
         refreshCookies(){
             axios.post('/logout').then(response => {

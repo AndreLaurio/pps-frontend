@@ -31,7 +31,7 @@
                                 </td>
                                 <td class="text-center">
                                     <v-btn class="mx-2 success" small v-on:click="acceptAccount(row.item, row.item.id)"><v-icon>mdi-check-bold</v-icon></v-btn>
-                                    <v-btn class="mx-2 error" small v-on:click="rejectAccount(row.item.id)"><v-icon>mdi-delete</v-icon></v-btn>
+                                    <v-btn class="mx-2 error" small v-on:click="rejectAccount(row.item,row.item.id)"><v-icon>mdi-delete</v-icon></v-btn>
                                 </td>
                             </tr>
                         </template>
@@ -109,11 +109,13 @@ export default {
                 console.log('ERROR please call the administrator')
             })
         },
-        rejectAccount(id){
+        rejectAccount(account,id){
             axios.put(`/api/accounts/${id}`,{
                 is_approved: 3,
                 approved_by: this.userId
             }).then(response => {
+                var index = this.pendingAccount.indexOf(account)
+                this.pendingAccount.splice(index, 1)
                 this.rejectedSuccess = true
                 this.approvedSuccess = false
             }).catch(error =>{
