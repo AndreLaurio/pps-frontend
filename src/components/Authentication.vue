@@ -37,7 +37,7 @@
                     </v-card-actions>
                 </v-card>
                 <div v-if="registrationSuccess == true" class="mt-12 pt-12 regsuccess">
-                    <h1>Account Successfully Created !</h1>
+                    <h1>Account Successfully Created!</h1>
                     <div class="mt-5">
                         <h2>Dear {{register_data.first_name}},</h2> 
                     </div>
@@ -52,7 +52,7 @@
                          <h4>Administrator</h4>
                     </div>
                     <div>
-                        <v-btn class="pl-12 pr-12 mt-5 primary" v-on:click="returnIndex"> Home </v-btn>
+                        <v-btn class="pl-12 pr-12 mt-5" v-on:click="returnIndex"> Home </v-btn>
                     </div>
                 </div>
             </v-flex>
