@@ -51,7 +51,7 @@ export default {
     methods:{
         getUserData(){
             axios.get('/api/user').then(response =>{
-                this.userData.user_id = response.data.id,
+                this.userData.user_id = response.data.user_id,
                 this.userData.first_name = response.data.first_name,
                 this.userData.last_name = response.data.last_name
             })

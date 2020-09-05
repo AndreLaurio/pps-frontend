@@ -30,8 +30,8 @@
                                     {{row.item.created_at}}
                                 </td>
                                 <td class="text-center">
-                                    <v-btn class="mx-2 success" small v-on:click="acceptAccount(row.item, row.item.id)"><v-icon>mdi-check-bold</v-icon></v-btn>
-                                    <v-btn class="mx-2 error" small v-on:click="rejectAccount(row.item,row.item.id)"><v-icon>mdi-delete</v-icon></v-btn>
+                                    <v-btn class="mx-2 success" small v-on:click="acceptAccount(row.item, row.item.user_id)"><v-icon>mdi-check-bold</v-icon></v-btn>
+                                    <v-btn class="mx-2 error" small v-on:click="rejectAccount(row.item,row.item.user_id)"><v-icon>mdi-delete</v-icon></v-btn>
                                 </td>
                             </tr>
                         </template>
@@ -85,7 +85,7 @@ export default {
     methods:{
         getUserData(){
             axios.get('/api/user').then(response =>{
-                this.userId = response.data.id
+                this.userId = response.data.user_id
             })
         },
         getAccounts(){
