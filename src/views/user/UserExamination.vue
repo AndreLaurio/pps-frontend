@@ -1,6 +1,6 @@
 <template>
     <div class="pop mt-12 ml-12">
-        <h1 class="mb-12">Examination</h1>
+        <h2 class="mb-12">Examination</h2>
         <v-layout>
             <v-flex>
                 <v-card max-width="300">
