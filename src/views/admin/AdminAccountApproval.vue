@@ -30,8 +30,8 @@
                                     {{row.item.created_at}}
                                 </td>
                                 <td class="text-center">
-                                    <v-btn class="mx-2 success" small v-on:click="acceptAccount(row.item, row.item.id)"><v-icon>mdi-check-bold</v-icon></v-btn>
-                                    <v-btn class="mx-2 error" small v-on:click="rejectAccount(row.item,row.item.id)"><v-icon>mdi-delete</v-icon></v-btn>
+                                    <v-btn class="mx-2 success" small v-on:click="acceptAccount(row.item, row.item.user_id)"><v-icon>mdi-check-bold</v-icon></v-btn>
+                                    <v-btn class="mx-2 error" small v-on:click="rejectAccount(row.item,row.item.user_id)"><v-icon>mdi-delete</v-icon></v-btn>
                                 </td>
                             </tr>
                         </template>
@@ -85,7 +85,7 @@ export default {
     methods:{
         getUserData(){
             axios.get('/api/user').then(response =>{
-                this.userId = response.data.id
+                this.userId = response.data.user_id
             })
         },
         getAccounts(){
@@ -94,8 +94,8 @@ export default {
                 // console.log(response.data)
             })
         },
-        acceptAccount(account,id){
-            axios.put(`/api/accounts/${id}`,{
+        acceptAccount(account, user_id){
+            axios.put(`/api/accounts/${user_id}`,{
                 is_approved: 1,
                 approved_by: this.userId
             }).then(response => {
@@ -109,8 +109,8 @@ export default {
                 console.log('ERROR please call the administrator')
             })
         },
-        rejectAccount(account,id){
-            axios.put(`/api/accounts/${id}`,{
+        rejectAccount(account, user_id){
+            axios.put(`/api/accounts/${user_id}`,{
                 is_approved: 3,
                 approved_by: this.userId
             }).then(response => {

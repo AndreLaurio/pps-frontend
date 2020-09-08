@@ -8,10 +8,10 @@
                     </v-card-title>
                     <v-card-text class="pl-12 pr-12">
                         <div class="valsuccess">{{register_validation_success}}</div>
-                        <v-radio-group v-model="register_data.user_type" row>
-                            <v-radio color="#760D11" label="Admin" value="2"></v-radio>
+                        <v-radio-group v-model="register_data.user_type_id" row>
+                            <v-radio color="#760D11" label="Admin" value="1"></v-radio>
                             <v-spacer></v-spacer>
-                            <v-radio color="#760D11" label="User" value="1"></v-radio>
+                            <v-radio color="#760D11" label="User" value="2"></v-radio>
                         </v-radio-group>
                         <v-text-field v-model="register_data.first_name" :counter="15" outlined label="First Name"></v-text-field>
                         <v-text-field v-model="register_data.surname" :counter="15" outlined label="Surname"></v-text-field>
@@ -62,7 +62,7 @@ export default {
                 surname:'',
                 email:'',
                 password:'',
-                user_type:''
+                user_type_id:''
             },
             emailRules:[
                 v => !!v || 'E-mail is required',
@@ -88,7 +88,7 @@ export default {
                 email: this.register_data.email,
                 password: this.register_data.password,
                 password_confirmation: this.register_data.password,
-                user_type: this.register_data.user_type
+                user_type_id: this.register_data.user_type_id
             }).then(response => {
                 this.register_data.first_name = '',
                 this.register_data.last_name = '',

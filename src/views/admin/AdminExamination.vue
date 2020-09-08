@@ -10,7 +10,7 @@
                 <v-text-field prepend-inner-icon="mdi-magnify" rounded solo label="Search Exam"></v-text-field>
             </v-flex>
             <v-flex class="ml-12">
-                <v-btn color="#760D11" dark rounded> <v-icon size="17" class="pr-1">mdi-plus-thick</v-icon> Create Exam </v-btn>    
+                <v-btn color="#760D11" dark rounded v-on:click="createExamination"> <v-icon size="17" class="pr-1">mdi-plus-thick</v-icon> Create Exam </v-btn>    
             </v-flex>
         </v-layout>
         <v-layout row wrap class="mt-5">
@@ -47,6 +47,11 @@ import AdminDashboard from '@/components/admin/AdminDashboard'
 export default {
     components:{
         AdminDashboard
+    },
+    methods:{
+        createExamination(){
+            this.$router.push({ name: 'AdminCreateExamination' })
+        }
     }
 }
 </script>

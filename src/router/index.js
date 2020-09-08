@@ -13,6 +13,7 @@ import AdminCreateUser from '../views/admin/AdminCreateUser'
 import AdminAccountApproval from '../views/admin/AdminAccountApproval'
 import AdminExamination from '../views/admin/AdminExamination'
 import AdminExaminees from '../views/admin/AdminExaminees'
+import AdminCreateExamination from '../views/admin/AdminCreateExamination'
 
 Vue.use(VueRouter)
 
@@ -61,6 +62,11 @@ Vue.use(VueRouter)
     path: '/admin/examination',
     name: 'AdminExamination',
     component: AdminExamination
+  },
+  {
+    path: '/admin/create-examination',
+    name: 'AdminCreateExamination',
+    component: AdminCreateExamination
   }
 ]
 const router = new VueRouter({

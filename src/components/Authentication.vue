@@ -138,15 +138,16 @@ export default {
                     email: this.register_data.email,
                     password: this.register_data.password,
                     password_confirmation:this.register_data.password,
-                    user_type: 1
+                    user_type_id: 2
                 }).then(response => {
                     //show pending for approval
                     this.registrationSuccess = true
                     //auto login when registred successfully  this.$router.push({ name: 'User' })
                 }).catch(err => {
-                    //this.validationErrors = err.response.data.errors
+                    // this.validationErrors = err.response.data.errors
                     // not fixed so alternative way
                     this.registerValidation = 'The Email is already taken.'
+                    // console.log(err.response.data.errors);
                 })
             }).catch(err => {
                 console.log('sanctum error')
@@ -160,13 +161,13 @@ export default {
                 }).then(response => {
                     axios.get('/api/user').then(response =>{
                         let is_approved = response.data.is_approved
-                        let user_type = response.data.user_type
+                        let user_type_id = response.data.user_type_id
                         if(is_approved == 1){
-                            if(user_type == 1){
+                            if(user_type_id == 2){
                                 this.$router.push({ name: 'User' })
-                            } else if(user_type == 2){
+                            } else if(user_type_id == 1){
                                 this.$router.push({ name: 'Admin' })
-                            } else if(user_type == 3){
+                            } else if(user_type_id == 3){
                                 // Super Admin
                             }
                         }else{
