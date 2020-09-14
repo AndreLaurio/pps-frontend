@@ -1,5 +1,5 @@
 <template>
-    <div class="pop mt-12 ml-12">
+    <div class="pop mt-5 ml-12">
         <h2 class="mb-12">Examination</h2>
         <v-layout>
             <v-flex v-for="exam in exams" :key="exam.exam_id">

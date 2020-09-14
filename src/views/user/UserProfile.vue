@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Profile</h1>
+        <Profile/>
         <v-main>
             <UserDashboard/>
         </v-main>
@@ -9,9 +9,11 @@
 
 <script>
 import UserDashboard from '@/components/user/UserDashboard'
+import Profile from '@/components/Profile'
+
 export default {
     components:{
-        UserDashboard
+        UserDashboard, Profile
     }
 }
 </script>

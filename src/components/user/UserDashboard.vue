@@ -12,6 +12,8 @@
                         </div>
                     </v-list-item-content>
                 </v-list> 
+                <v-list-item-group
+                 active-class="deep-purple--text text--accent-4">
                 <v-list-item link>
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-home</v-icon>
@@ -44,6 +46,7 @@
                         Logout
                     </v-list-item-content>
                 </v-list-item>
+                </v-list-item-group>
             </v-list>
         </v-navigation-drawer>
 
@@ -98,7 +101,7 @@ export default {
         },
         userProfile(){
             this.$router.push({ name: 'UserProfile' })
-        }
+        },
     }
 }
 </script>
