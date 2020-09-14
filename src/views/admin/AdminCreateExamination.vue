@@ -204,7 +204,6 @@ export default {
             })
         },
         addExamination() {
-            console.log(this.exam)
             axios.post('/api/exam/create', this.exam).then((response) => {
                 this.message = 'success'
             }).catch((error) => {

@@ -6,6 +6,7 @@ import Home from '../views/Home'
 import User from '../views/user/UserIndex'
 import UserExamination from '../views/user/UserExamination'
 import UserProfile from '../views/user/UserProfile'
+import UserTakeExam from '../views/user/UserTakeExam'
 
 //Admin
 import Admin  from '../views/admin/AdminIndex'
@@ -37,6 +38,11 @@ Vue.use(VueRouter)
     path: '/user/profile',
     name: 'UserProfile',
     component: UserProfile
+  },
+  {
+    path: '/user/exam/take',
+    name: 'UserTakeExam',
+    component: UserTakeExam
   },
   {
     path: '/admin',
