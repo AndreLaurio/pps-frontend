@@ -15,16 +15,37 @@
         </v-layout>
         <v-layout row wrap class="mt-5">
             <v-flex xs12 sm12 md10 xl7>
-                <v-expansion-panels accordion>
+
+                <v-expansion-panels accordion v-for="exam in exams" :key="exam.exam_id">
                     <v-expansion-panel>
                         <v-expansion-panel-header>
-                            <h3>Sample Title</h3>
+                            <h3 class="colored-title">{{exam.exam_title}}</h3>
+                            <span><b>Last update: </b>{{exam.updated_on_f}}</span>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
-                            <h3>Sample content</h3>
+
+                            <p>{{exam.exam_desc}}</p>
+                            <p><b>Time Duration: </b>{{exam.time_duration}} mins</p>
+                            <p><b>Passing Score: </b>{{exam.passing_score}}/{{exam.total_score}}</p>
+                            <p><b>Number of questions: </b>{{exam.total_num_questions}}</p>
+                            <p v-if="exam.is_randomized == true"><b>Randomized</b></p>
+
+                            <v-container class="text-center">
+                                <v-btn class="ma-2" outlined rounded color="grey">
+                                    <v-icon left>mdi-visibility</v-icon> View
+                                </v-btn>
+                                <v-btn class="ma-2" outlined rounded color="success">
+                                    <v-icon left>mdi-pencil</v-icon> Edit
+                                </v-btn>
+                                <v-btn class="ma-2" outlined rounded color="red">
+                                    <v-icon left>mdi-pencil</v-icon> Delete
+                                </v-btn>
+                            </v-container>
+
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </v-expansion-panels>
+
             </v-flex>
         </v-layout>
         <v-main>
@@ -38,19 +59,42 @@
 .pop{
     font-family: 'Poppins', sans-serif;
 }
-
+.colored-title {
+    color: #760D11;
+}
 </style>
 
 <script>
 import AdminDashboard from '@/components/admin/AdminDashboard'
+import axios from 'axios'
+ 
+axios.defaults.withCredentials = true
+axios.defaults.baseURL = 'http://localhost:8000'
 
 export default {
     components:{
         AdminDashboard
     },
+    data() {
+        return {
+            exams: [],
+            message: ''
+        }
+    },
+    mounted() {
+        this.loadExams()
+    },
     methods:{
         createExamination(){
             this.$router.push({ name: 'AdminCreateExamination' })
+        },
+        loadExams() {
+            axios.get('/api/exams').then((response) => {
+                this.exams = response.data
+                this.message = 'success'
+            }).catch((error) => {
+                this.message = 'error'
+            })
         }
     }
 }
