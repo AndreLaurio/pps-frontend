@@ -77,6 +77,7 @@ export default {
         return{
             sex: ['Female', 'Male'],
             user_id:'',
+            user_email:'',
             user_password:'',
             emailRules:[
                 v => !!v || 'E-mail is required',
@@ -110,13 +111,26 @@ export default {
         getUserData(){
             axios.get('/api/user').then(response =>{
                 this.user_id = response.data.user_id
+                this.user_email = response.data.email
             })
         },
         changeDetails(){
             console.log(this.user_details.first_name + this.user_details.last_name + this.user_details.extension_name + this.user_details.address + this.user_details.sex)
         },
         changePassword(){
-            console.log(this.user_password.email + this.user_password.password + this.user_password.confirm_password)
+            //check the email for authentication
+            let current_email = this.user_email
+            if(this.user_password.email != this.user_email){
+                console.log('Email incorrect')
+            }else if(this.user_password.password == this.user_password.confirm_password){
+                //get the user id
+                let user_id = this.user_id
+                axios.put(`/api/changepw/${user_id}`,{
+                    new_password: this.user_password.password
+                })
+            }else{
+                console.log('password incorrect')
+            }
         }
     }
 }
