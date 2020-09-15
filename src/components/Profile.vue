@@ -15,7 +15,28 @@
                             <v-flex>
                                 First Name<v-text-field solo dense v-model="user_details.first_name"></v-text-field>
                                 Middle Name<v-text-field solo dense v-model="user_details.middle_name"></v-text-field>
-                                Address<v-text-field solo dense v-model="user_details.address"></v-text-field>
+                                <v-menu
+                                    ref="menu"
+                                    v-model="menu"
+                                    :close-on-content-click="false"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="290px">
+                                    <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                        v-model="user_details.birth_date"
+                                        label="Birthday date"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                    ref="picker"
+                                    v-model="user_details.birth_date"
+                                    :max="new Date().toISOString().substr(0, 10)"
+                                    min="1950-01-01"
+                                    @change="save"></v-date-picker>
+                                </v-menu>
                             </v-flex>
                             <v-flex>
                                 Last Name<v-text-field solo dense v-model="user_details.last_name"></v-text-field>
@@ -79,6 +100,7 @@ export default {
             user_id:'',
             user_email:'',
             user_password:'',
+            menu: false,
             emailRules:[
                 v => !!v || 'E-mail is required',
                 v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
@@ -92,7 +114,7 @@ export default {
                 middle_name:'',
                 last_name:'',
                 extension_name:'',
-                address:'',
+                birth_date:'',
                 sex:''
             },
             user_password:{
@@ -103,6 +125,11 @@ export default {
             show_password: false,
             confirmation_password:false,
         }
+    },
+    watch: {
+      menu (val) {
+        val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+      },
     },
     mounted(){
         this.getUserData()
@@ -115,7 +142,19 @@ export default {
             })
         },
         changeDetails(){
-            console.log(this.user_details.first_name + this.user_details.last_name + this.user_details.extension_name + this.user_details.address + this.user_details.sex)
+            let user_id = this.user_id
+            axios.put(`/api/changedetails/${user_id}`,{
+                first_name: this.user_details.first_name,
+                middle_name: this.user_details.middle_name,
+                last_name: this.user_details.last_name,
+                extension_name: this.user_details.extension_name,
+                birth_date: this.user_details.birth_date,
+                gender: this.user_details.gender
+            }).then(response => {
+                console.log('success')
+            }).catch(error => {
+                console.log('error')
+            })
         },
         changePassword(){
             //check the email for authentication
@@ -131,7 +170,10 @@ export default {
             }else{
                 console.log('password incorrect')
             }
-        }
+        },
+        save (date) {
+            this.$refs.menu.save(date)
+      },
     }
 }
 </script>
