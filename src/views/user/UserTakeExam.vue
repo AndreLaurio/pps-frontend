@@ -28,7 +28,7 @@
             <v-container v-if="is_taking_exam == true">
 
                 <v-card-text class="pl-12 pr-12">
-                    <v-card v-for="item in exam.exam_items" :key="item.item_no" class="pa-4 mb-4">
+                    <v-card v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4">
 
                         <div>
                             <v-row>
@@ -42,28 +42,58 @@
                         </div>
                         
                         <div v-if="item.question_type_code == 'SCQ'">
-                            <v-radio-group v-model="answers[item.item_no]" :mandatory="false">
+                            <v-radio-group v-model="item.answer" :mandatory="false">
                                 <v-radio v-for="choice in item.choices" :key="choice.choice_no" :value="choice.choice_no" :label="choice.label"></v-radio>
                             </v-radio-group>
                         </div>
 
 
                         <div v-if="item.question_type_code == 'MCQ'">
+                            <p>Please select only {{item.mcq_max_selection}} choices.</p>
                             <div v-for="choice in item.choices" :key="choice.choice_no">
                                 <v-checkbox
                                     :label="choice.label"
-                                    :value="choice.choice_no"
-                                    v-model="answers[item.item_no]"
-                                    v-on:change="test"
+                                    v-model="choice.is_selected"
+                                    v-on:change="checkMCQAnswer(item, choice)"
+
                                     hide-details>
                                 </v-checkbox>
                             </div>
                         </div>
 
+                        <div v-if="item.question_type_code == 'FTQ'">
+                            <v-textarea v-model="item.answer" :counter="200" outlined placeholder="Please write your answer." :rows="3" />
+                        </div>
+
+                        <div>
+                            <p :id="`m-${item_no}`">{{exam.exam_items[item_no].message}}</p>
+                        </div>
+
                     </v-card>
                 </v-card-text>
 
-                <v-btn v-on:click="test">Test</v-btn>
+                <v-row justify="center">
+                    <v-dialog v-model="submitAnswerDialog" persistent max-width="290">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                color="primary"
+                                dark
+                                v-bind="attrs"
+                                v-on="on">
+                            Submit Answer
+                            </v-btn>
+                        </template>
+                        <v-card>
+                            <v-card-title class="headline">Submit You Answer</v-card-title>
+                            <v-card-text></v-card-text>
+                            <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" text @click="submitAnswerDialog = false">No</v-btn>
+                            <v-btn color="green darken-1" text @click="submitAnswer">Yes, continue</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-row>
 
             </v-container>
 
@@ -92,6 +122,7 @@ axios.defaults.baseURL = 'http://localhost:8000'
 export default {
     data(){
         return{
+            submitAnswerDialog: false,
             exam_id: '',
             user_id: '',
             exam: [],
@@ -114,6 +145,7 @@ export default {
                 this.loadExamSession()
             }).catch((error) => {
                 this.message = 'error'
+                console.log(error.response.data.errors)
             })
         },
         loadExamSession() {      
@@ -128,6 +160,7 @@ export default {
                         this.message = 'success'
                     }
                     else {
+                        this.getExamDesc(response.data.session_exam_id)
                         this.message = 'You already taking this exam.'
                     }
                 }
@@ -135,7 +168,8 @@ export default {
                     this.message = 'Please choose an exam to take.'
                 }
             }).catch((error) => {
-                console.log(error)
+                this.message = 'error'
+                console.log(error.response.data.errors)
             })
         },
         getExamDesc(exam_id) {
@@ -143,54 +177,73 @@ export default {
                 this.exam = response.data
             }).catch((error) => {
                 this.message = 'error'
+                console.log(error.response.data.errors)
             })
         },
         takeExam() {
+
             axios.get(`/api/exam/items/${this.exam.exam_id}`).then((response) => {
                 this.exam.exam_items = response.data.exam_items
                 this.exam.exam_groups = response.data.exam_groups
                 
                 this.is_taking_exam = true
                 this.message = 'takeExam success'
+
+                axios.post('/api/exam/take/session/set', {
+                    'user_id': this.user_id,
+                    'exam': this.exam
+                }).then((response) => {
+
+                }).catch((error) => {
+
+                })
+
             }).catch((error) => {
                 this.message = 'error'
+                console.log(error.response.data.errors)
             })
         },
         toLetter(index) {
             return String.fromCharCode(index + 'A'.charCodeAt(0))
         },
-        checkMCQAnswer(item_no, choice_no, mcq_max_selection) {
-
-            if (this.exam.exam_items[item_no].hasOwnProperty('count_selected') == false) {
-                this.exam.exam_items[item_no].count_selected = 0
+        checkMCQAnswer(item, choice) {
+            
+            if (item.hasOwnProperty('count_selected') == false) {
+                item.count_selected = 0
             }
 
-            let count_selected = this.exam.exam_items[item_no].count_selected;
-            let is_selected = this.exam.exam_items[item_no].choices[choice_no].is_selected;
-
-            if (is_selected == 1) {
-                
-                if (count_selected + 1 <= mcq_max_selection) {
-                    this.exam.exam_items[item_no].count_selected = count_selected + 1
-                }
-                else {
-                    this.exam.exam_items[item_no].choices[choice_no].is_selected = 0 
-                }
+            if (choice.is_selected == true) {
+                item.count_selected++
             }
             else {
-                this.exam.exam_items[item_no].count_selected = count_selected - 1
+                item.count_selected--
             }
 
-            console.log(this.exam.exam_items[item_no])
-            console.log(this.exam.exam_items[item_no].count_selected)
+            if (item.count_selected > item.mcq_max_selection) {
 
-            this.message = mcq_max_selection
+                document.getElementById('m-' + item.item_no).innerHTML = "You can only choose " + item.mcq_max_selection + " options."
+            }
+            else {
+                document.getElementById('m-' + item.item_no).innerHTML = ""
+            }
         },
+        submitAnswer() {
 
+            axios.post('/api/exam/check', {
+                'exam': this.exam,
+                'user_id': this.user_id
+            }).then((response) => {
+                this.message = "success"
+                this.submitAnswerDialog = false
+            }).catch((error) => {
+                this.messsage = "error"
+                this.submitAnswerDialog = false
+            })
+        },
         test() {
             
             this.message = 'test'
-            console.log(this.answers)
+            console.log(this.exam)
         }
     }
 }
