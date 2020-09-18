@@ -1,72 +1,81 @@
 <template>
     <div class="pop mt-12 ml-12">
         <!-- <h2 class="mb-12">Take </h2> -->
+        <div class="text-center mr-12">
+            <v-progress-circular v-if="loading == true"
+                :rotate="90"
+                :size="100"
+                :width="15"
+                :value="value"
+                color="red"
+                >
+                {{ value }}
+            </v-progress-circular>
+        </div>
         <v-container>
-            <v-card class="mx-auto" max-width="344" outlined v-if="is_taking_exam == false">
-                <v-list-item two-line>
-                    
-                    <v-list-item-content>
-                        <v-list-item-title class="headline mb-1">{{exam.exam_title}}</v-list-item-title>
-                        <v-list-item-subtitle>
-                            <p>{{exam.exam_desc}}</p>
-                            <p><b>Time Duration: </b>{{exam.time_duration}} mins</p>
-                            <p><b>Passing Score: </b>{{exam.passing_score}}/{{exam.total_score}}</p>
-                            <p><b>Number of questions: </b>{{exam.total_num_questions}}</p>
-                        </v-list-item-subtitle>
-                    </v-list-item-content>
-
-                </v-list-item>
-
-                <v-card-actions>
-                    <v-btn right v-on:click="takeExam">Take Exam</v-btn>
+            <v-card class="mx-auto rounded-xl card-border" elevation="15" max-width="800" outlined v-if="is_taking_exam == false && loading == false">
+                <v-card-title class="mt-5 pl-12">
+                    <h3 class="pop exam-warning">{{exam.exam_title}}</h3>
+                </v-card-title>
+                <v-card-text class="pl-12 mr-5">
+                    <h3>{{exam.exam_desc}}</h3> <br>
+                        <div class="exam-warning">
+                            <b>Time Duration: </b>{{exam.time_duration}} mins <br>
+                            <b>Passing Score: </b>{{exam.passing_score}}/{{exam.total_score}} <br>
+                            <b>Number of questions: </b>{{exam.total_num_questions}} <br>
+                        </div>
+                </v-card-text>
+                <v-card-actions class="mr-5 mb-5">
+                    <v-spacer></v-spacer>
+                    <v-btn class="primary red accent-4" v-on:click="takeExam" :loading="loadingTake">Take Exam</v-btn>
                 </v-card-actions>
             </v-card>
-
+            
 
             <p>{{message}}</p>
 
             <v-container v-if="is_taking_exam == true">
 
-                <v-card-text class="pl-12 pr-12">
-                    <v-card v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4">
+                <h2 class="pop exam-warning">{{exam.exam_title}}</h2>
 
-                        <div>
+                <v-card-text class="pl-12 pr-12">
+                    <v-card elevation="15" v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4 rounded-xl">
+
+                        <div class="ml-5">
                             <v-row>
                                 <v-col>
-                                    <span>{{item.item_no+1}}</span>
-                                </v-col>
-                                <v-col>
-                                    <p>{{item.text}}</p>
+                                    <span style="display:inline" class="exam-warning mr-1"> {{item.item_no+1}}.</span> 
+                                    <span style="display:inline">{{item.text}}</span>
                                 </v-col>
                             </v-row>
                         </div>
                         
-                        <div v-if="item.question_type_code == 'SCQ'">
+                        <div v-if="item.question_type_code == 'SCQ'" class="ml-10">
                             <v-radio-group v-model="item.answer" :mandatory="false">
-                                <v-radio v-for="choice in item.choices" :key="choice.choice_no" :value="choice.choice_no" :label="choice.label"></v-radio>
+                                <v-radio color="red darken-3" v-for="choice in item.choices" :key="choice.choice_no" :value="choice.choice_no" :label="choice.label"></v-radio>
                             </v-radio-group>
                         </div>
 
 
-                        <div v-if="item.question_type_code == 'MCQ'">
+                        <div v-if="item.question_type_code == 'MCQ'" class="ml-10">
                             <p>Please select only {{item.mcq_max_selection}} choices.</p>
                             <div v-for="choice in item.choices" :key="choice.choice_no">
                                 <v-checkbox
                                     :label="choice.label"
                                     v-model="choice.is_selected"
                                     v-on:change="checkMCQAnswer(item, choice)"
-
+                                    color="red darken-3"
                                     hide-details>
                                 </v-checkbox>
                             </div>
                         </div>
 
-                        <div v-if="item.question_type_code == 'FTQ'">
+                        <div v-if="item.question_type_code == 'FTQ'" class="ml-10">
                             <v-textarea v-model="item.answer" :counter="200" outlined placeholder="Please write your answer." :rows="3" />
                         </div>
 
                         <div>
-                            <p :id="`m-${item_no}`">{{exam.exam_items[item_no].message}}</p>
+                            <p class="exam-warning ml-10 mt-2" :id="`m-${item_no}`">{{exam.exam_items[item_no].message}}</p>
                         </div>
 
                     </v-card>
@@ -76,7 +85,7 @@
                     <v-dialog v-model="submitAnswerDialog" persistent max-width="290">
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn
-                                color="primary"
+                                class="primary red accent-4"
                                 dark
                                 v-bind="attrs"
                                 v-on="on">
@@ -84,12 +93,12 @@
                             </v-btn>
                         </template>
                         <v-card>
-                            <v-card-title class="headline">Submit You Answer</v-card-title>
+                            <v-card-title class="headline">Are you sure to submit your answer?</v-card-title>
                             <v-card-text></v-card-text>
                             <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="green darken-1" text @click="submitAnswerDialog = false">No</v-btn>
-                            <v-btn color="green darken-1" text @click="submitAnswer">Yes, continue</v-btn>
+                            <v-btn color="green darken-1" text @click="submitAnswer" :loading="loadingSubmit">Yes, continue</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -110,6 +119,12 @@
 .pop{
     font-family: 'Poppins', sans-serif;
 }
+.exam-warning{
+    color: #760D11;
+}
+.card-border{
+    border: 4px solid #760D11;
+}
 </style>
 
 <script>
@@ -129,7 +144,12 @@ export default {
             answers: [],
             message: 'sample',
             is_taking_exam: false,
-            answer: 0
+            answer: 0,
+            loading:true,
+            loadingTake:false,
+            loadingSubmit:false,
+            interval: {},
+            value: 0,
         }
     },
     components:{
@@ -137,6 +157,11 @@ export default {
     },
     mounted() {
         this.loadData()
+        this.loadingButton()
+    },
+     // for loading button
+    beforeDestroy () {
+        clearInterval(this.interval)
     },
     methods:{
         loadData(){
@@ -175,17 +200,17 @@ export default {
         getExamDesc(exam_id) {
             axios.get(`/api/exam/desc/${exam_id}`).then((response) => {
                 this.exam = response.data
+                this.loading = false
             }).catch((error) => {
                 this.message = 'error'
                 console.log(error.response.data.errors)
             })
         },
         takeExam() {
-
+            this.loadingTake = true
             axios.get(`/api/exam/items/${this.exam.exam_id}`).then((response) => {
                 this.exam.exam_items = response.data.exam_items
-                this.exam.exam_groups = response.data.exam_groups
-                
+                this.exam.exam_groups = response.data.exam_groups 
                 this.is_taking_exam = true
                 this.message = 'takeExam success'
 
@@ -228,7 +253,7 @@ export default {
             }
         },
         submitAnswer() {
-
+            this.loadingSubmit = true
             axios.post('/api/exam/check', {
                 'exam': this.exam,
                 'user_id': this.user_id
@@ -239,6 +264,14 @@ export default {
                 this.messsage = "error"
                 this.submitAnswerDialog = false
             })
+        },
+        loadingButton(){
+            this.interval = setInterval(() => {
+                if (this.value === 100) {
+                    return (this.value = 0)
+                }
+                this.value += 10
+            }, 1000)
         },
         test() {
             

@@ -1,24 +1,35 @@
 <template>
     <div class="pop mt-5 ml-12">
-        <h2 class="mb-12">Examination</h2>
+        <h2 class="mb-7">Examination</h2>
+            <div class="text-center mr-12">
+                <v-progress-circular v-if="loading == true"
+                    :rotate="90"
+                    :size="100"
+                    :width="15"
+                    :value="value"
+                    color="red"
+                    >
+                    {{ value }}
+                </v-progress-circular>
+            </div>
         <v-layout>
-            <v-flex v-for="exam in exams" :key="exam.exam_id">
-                <v-card max-width="300">
-                    <v-img src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" width="300px"></v-img>
-                    <v-card-title>
-                        {{exam.exam_title}}
-                    </v-card-title>
-                    <v-card-text>
-                        {{exam.exam_desc}}
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn class="primary" v-on:click="takeExam(exam.exam_id)">Take</v-btn>
-                    </v-card-actions>
-                </v-card>
+            <v-flex>
+                <v-row>
+                    <v-card v-for="exam in exams" :key="exam.exam_id" max-width="300" class="ml-5 mt-5">
+                        <v-img src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" width="300px"></v-img>
+                        <v-card-title>
+                            {{exam.exam_title}}
+                        </v-card-title>
+                        <v-card-text>
+                            {{exam.exam_desc}}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn class="primary red accent-4" v-on:click="takeExam(exam.exam_id)">Take Exam</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-row>
             </v-flex>
-
-            <p>{{message}}</p>
         </v-layout>
         
         <v-main>
@@ -46,7 +57,10 @@ export default {
         return{
             user_id: '',
             exams: [],
-            message: 'sample'
+            message: 'sample',
+            loading:true,
+            interval: {},
+            value: 0,
         }
     },
     components:{
@@ -55,6 +69,11 @@ export default {
     mounted() {
         this.getUserID(),
         this.loadExams()
+        this.loadingButton()
+    },
+     // for loading button
+    beforeDestroy () {
+        clearInterval(this.interval)
     },
     methods:{
         getUserID(){
@@ -65,9 +84,9 @@ export default {
         loadExams() {
             axios.get('/api/exams').then((response) => {
                 this.exams = response.data
-                this.message = 'success'
+                this.loading = false
             }).catch((error) => {
-                this.message = 'error'
+                console.log('Please call the adminsitrator')
             })
         },
         takeExam(exam_id) {
@@ -76,15 +95,24 @@ export default {
                 exam_id: exam_id
             }).then((response) => {
                 this.message = 'success'
-                console.log({
-                user_id: this.user_id,
-                exam_id: exam_id
-                });
+                // console.log({
+                // user_id: this.user_id,
+                // exam_id: exam_id
+                // });
                 this.$router.push({ name: 'UserTakeExam' })
             }).catch((error) => {
-                this.message = error.response.data.message
+                // this.message = error.response.data.message
+                console.log('Call the Administrator')
             });
-        }
+        },
+        loadingButton(){
+            this.interval = setInterval(() => {
+                if (this.value === 100) {
+                    return (this.value = 0)
+                }
+                this.value += 10
+            }, 1000)
+        },
 
     }
 }
