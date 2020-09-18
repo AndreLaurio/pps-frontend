@@ -16,7 +16,7 @@
         <v-layout row wrap class="mt-5">
             <v-flex xs12 sm12 md10 xl7>
 
-                <v-expansion-panels accordion v-for="exam in exams" :key="exam.exam_id">
+                <v-expansion-panels class="mt-3" accordion v-for="exam in exams" :key="exam.exam_id">
                     <v-expansion-panel>
                         <v-expansion-panel-header>
                             <h3 class="colored-title">{{exam.exam_title}}</h3>
