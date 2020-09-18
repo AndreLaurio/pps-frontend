@@ -30,6 +30,19 @@
                     </v-card>
                 </v-row>
             </v-flex>
+
+            <v-row justify="center">
+                <v-dialog v-model="dialog.show" persistent max-width="290">
+                    <v-card>
+                        <v-card-title class="headline">{{dialog.title}}</v-card-title>
+                        <v-card-text>{{dialog.message}}</v-card-text>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="dialog.show = false">Got it</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-row>
         </v-layout>
         
         <v-main>
@@ -61,6 +74,10 @@ export default {
             loading:true,
             interval: {},
             value: 0,
+            dialog: {
+                show: false,
+                title: ''
+            }
         }
     },
     components:{
@@ -94,14 +111,18 @@ export default {
                 user_id: this.user_id,
                 exam_id: exam_id
             }).then((response) => {
-                this.message = 'success'
-                // console.log({
-                // user_id: this.user_id,
-                // exam_id: exam_id
-                // });
-                this.$router.push({ name: 'UserTakeExam' })
+
+                if (response.data.status == 'success') {
+                    this.$router.push({ name: 'UserTakeExam' })
+                }
+                else if (response.data.status == 'error') {
+
+                    this.dialog.title = 'Examination Dialog'
+                    this.dialog.message = response.data.message
+                    this.dialog.show = true
+                }
+                
             }).catch((error) => {
-                // this.message = error.response.data.message
                 console.log('Call the Administrator')
             });
         },

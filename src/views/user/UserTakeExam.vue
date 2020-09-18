@@ -1,6 +1,8 @@
 <template>
     <div class="pop mt-12 ml-12">
-        <!-- <h2 class="mb-12">Take </h2> -->
+        <p>{{message}}</p>
+
+
         <div class="text-center mr-12">
             <v-progress-circular v-if="loading == true"
                 :rotate="90"
@@ -13,7 +15,7 @@
             </v-progress-circular>
         </div>
         <v-container>
-            <v-card class="mx-auto rounded-xl card-border" elevation="15" max-width="800" outlined v-if="is_taking_exam == false && loading == false">
+            <v-card class="mx-auto rounded-xl card-border" elevation="15" max-width="800" outlined v-if="is_taking_exam == false && loading == false && has_result == false">
                 <v-card-title class="mt-5 pl-12">
                     <h3 class="pop exam-warning">{{exam.exam_title}}</h3>
                 </v-card-title>
@@ -24,17 +26,17 @@
                             <b>Passing Score: </b>{{exam.passing_score}}/{{exam.total_score}} <br>
                             <b>Number of questions: </b>{{exam.total_num_questions}} <br>
                         </div>
+                    <br>
+                    <p class="exam-warning mt-2">{{taking_exam_message}}</p>
                 </v-card-text>
                 <v-card-actions class="mr-5 mb-5">
                     <v-spacer></v-spacer>
-                    <v-btn class="primary red accent-4" v-on:click="takeExam" :loading="loadingTake">Take Exam</v-btn>
+                    <v-btn class="primary red accent-4" v-if="continue_exam == false" v-on:click="takeExam" :loading="loadingTake">Take Exam</v-btn>
+                    <v-btn class="primary red accent-4" v-if="continue_exam == true" v-on:click="takeExam" :loading="loadingTake">Continue Exam</v-btn>
                 </v-card-actions>
             </v-card>
-            
 
-            <p>{{message}}</p>
-
-            <v-container v-if="is_taking_exam == true">
+            <v-container v-if="is_taking_exam == true && has_result == false">
 
                 <h2 class="pop exam-warning">{{exam.exam_title}}</h2>
 
@@ -93,8 +95,8 @@
                             </v-btn>
                         </template>
                         <v-card>
-                            <v-card-title class="headline">Are you sure to submit your answer?</v-card-title>
-                            <v-card-text></v-card-text>
+                            <v-card-title class="headline">Submission</v-card-title>
+                            <v-card-text>Are you sure to submit your answer?</v-card-text>
                             <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="green darken-1" text @click="submitAnswerDialog = false">No</v-btn>
@@ -106,6 +108,23 @@
 
             </v-container>
 
+            <v-card class="mx-auto rounded-xl card-border" elevation="15" max-width="800" outlined v-if="is_taking_exam == false  && has_result == true">
+                <v-card-title class="mt-5 pl-12">
+                    <h3 class="pop exam-warning">Exam Result</h3>
+                </v-card-title>
+                <v-card-text class="pl-12 mr-5">
+                    
+                        <div class="exam-warning">
+                            <b>Examinee no: </b>{{result.examinee_no}}<br>
+                            <b>Score: </b>{{result.overall_score}}/{{result.total_score}} <br>
+                            <p>Wait for admin@gmail.com to message you for interview for details.</p>
+                        </div>
+                </v-card-text>
+                <v-card-actions class="mr-5 mb-5">
+                    <v-spacer></v-spacer>
+                    <v-btn class="primary red accent-4" v-on:click="printExam" :loading="loadingPrint">Print</v-btn>
+                </v-card-actions>
+            </v-card>
         </v-container>
         
         <v-main>
@@ -142,7 +161,7 @@ export default {
             user_id: '',
             exam: [],
             answers: [],
-            message: 'sample',
+            message: '',
             is_taking_exam: false,
             answer: 0,
             loading:true,
@@ -150,6 +169,12 @@ export default {
             loadingSubmit:false,
             interval: {},
             value: 0,
+            
+            loadingPrint: false,
+            has_result: false,
+            result: {},
+            taking_exam_message: '',
+            continue_exam: false
         }
     },
     components:{
@@ -169,8 +194,7 @@ export default {
                 this.user_id = response.data.user_id
                 this.loadExamSession()
             }).catch((error) => {
-                this.message = 'error'
-                console.log(error.response.data.errors)
+                console.log('Call the Administrator.')
             })
         },
         loadExamSession() {      
@@ -182,50 +206,52 @@ export default {
 
                     if (response.data.session_taken_on == null) {
                         this.getExamDesc(response.data.session_exam_id)
-                        this.message = 'success'
                     }
                     else {
                         this.getExamDesc(response.data.session_exam_id)
-                        this.message = 'You already taking this exam.'
+                        this.taking_exam_message = 'You already taking this exam.'
+                        this.continue_exam = true
                     }
                 }
                 else {
                     this.message = 'Please choose an exam to take.'
+                    this.loading = false
                 }
             }).catch((error) => {
-                this.message = 'error'
-                console.log(error.response.data.errors)
+                console.log('Call the Administrator.')
             })
         },
         getExamDesc(exam_id) {
+            
             axios.get(`/api/exam/desc/${exam_id}`).then((response) => {
                 this.exam = response.data
                 this.loading = false
             }).catch((error) => {
-                this.message = 'error'
-                console.log(error.response.data.errors)
+                console.log('Call the Administrator.')
+                this.loading = false
             })
         },
         takeExam() {
             this.loadingTake = true
+
             axios.get(`/api/exam/items/${this.exam.exam_id}`).then((response) => {
+
                 this.exam.exam_items = response.data.exam_items
                 this.exam.exam_groups = response.data.exam_groups 
                 this.is_taking_exam = true
-                this.message = 'takeExam success'
 
                 axios.post('/api/exam/take/session/set', {
                     'user_id': this.user_id,
                     'exam': this.exam
+
                 }).then((response) => {
 
                 }).catch((error) => {
-
+                    console.log('Call the Administrator')
                 })
 
             }).catch((error) => {
-                this.message = 'error'
-                console.log(error.response.data.errors)
+                console.log('Call the Administrator')
             })
         },
         toLetter(index) {
@@ -258,10 +284,11 @@ export default {
                 'exam': this.exam,
                 'user_id': this.user_id
             }).then((response) => {
-                this.message = "success"
+                this.result = response.data
+                this.has_result = true
+                this.is_taking_exam = false
                 this.submitAnswerDialog = false
             }).catch((error) => {
-                this.messsage = "error"
                 this.submitAnswerDialog = false
             })
         },
@@ -273,10 +300,11 @@ export default {
                 this.value += 10
             }, 1000)
         },
-        test() {
-            
-            this.message = 'test'
-            console.log(this.exam)
+        printExam() {
+            console.log('print')
+        },
+        continueExam() {
+            console.log('continue')
         }
     }
 }
