@@ -12,7 +12,7 @@
                     {{ value }}
                 </v-progress-circular>
             </div>
-        <v-layout>
+        <v-layout v-if="result.show == false">
             <v-flex>
                 <v-row>
                     <v-card v-for="exam in exams" :key="exam.exam_id" max-width="300" class="ml-5 mt-5">
@@ -21,10 +21,15 @@
                         </v-card-title>
                         <v-card-text>
                             {{exam.exam_desc}}
+
+                            <v-spacer></v-spacer>
+                            <p v-if="exam.exam_status_code == 'F'" color="error">Finished</p>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn class="primary red accent-4" v-on:click="takeExam(exam.exam_id)">Take Exam</v-btn>
+                            <v-btn v-if="exam.exam_status_code == 'N'" class="primary red accent-4" v-on:click="takeExam(exam.exam_id)">Take Exam</v-btn>
+                            <v-btn v-if="exam.exam_status_code == 'O'" class="primary orange accent-4" v-on:click="takeExam(exam.exam_id)">Continue Exam</v-btn>
+                            <v-btn v-if="exam.exam_status_code == 'F'" class="primary blue accent-4" @click="viewResult(exam.exam_id)">View Result</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-row>
@@ -42,6 +47,27 @@
                     </v-card>
                 </v-dialog>
             </v-row>
+        </v-layout>
+
+        <v-layout v-if="result.show == true">
+            <v-card class="mx-auto rounded-xl card-border" elevation="15" max-width="800" outlined>
+                <v-card-title class="mt-5 pl-12">
+                    <h3 class="pop exam-warning">Exam Result</h3>
+                </v-card-title>
+                <v-card-text class="pl-12 mr-5">
+                    
+                        <div class="exam-warning">
+                            <b>Examinee no: </b>{{result.examinee_no}}<br>
+                            <b>Score: </b>{{result.overall_score}}/{{result.total_score}} <br>
+                            <p>Wait for admin@gmail.com to message you for interview for details.</p>
+                        </div>
+                </v-card-text>
+                <v-card-actions class="mr-5 mb-5">
+                    <v-spacer></v-spacer>
+                    <v-btn class="primary accent-4" v-on:click="result.show = false">Back</v-btn>
+                    <v-btn class="primary red accent-4" v-on:click="printExam">Print</v-btn>
+                </v-card-actions>
+            </v-card>
         </v-layout>
         
         <v-main>
@@ -79,6 +105,12 @@ export default {
             dialog: {
                 show: false,
                 title: ''
+            },
+            result: {
+                show: false,
+                examinee_no: '',
+                overall_score: 0,
+                total_score: 0
             }
         }
     },
@@ -86,8 +118,7 @@ export default {
         UserDashboard
     },
     mounted() {
-        this.getUserID(),
-        this.loadExams()
+        this.load(),
         this.loadingButton()
     },
      // for loading button
@@ -95,13 +126,16 @@ export default {
         clearInterval(this.interval)
     },
     methods:{
-        getUserID(){
+        load() {
             axios.get('/api/user').then(response =>{
                 this.user_id = response.data.user_id
+                this.loadExams()
             })
         },
         loadExams() {
-            axios.get('/api/exams').then((response) => {
+            axios.post('/api/examinee/exams', {
+                user_id: this.user_id
+            }).then((response) => {
                 this.exams = response.data
                 this.loading = false
             }).catch((error) => {
@@ -136,7 +170,28 @@ export default {
                 this.value += 10
             }, 1000)
         },
+        viewResult(exam_id) {
+            
+            axios.post('/api/examinee/exam/result', {
+                user_id: this.user_id,
+                exam_id: exam_id
+            }).then((response) => {
+                
+                if (response.data.status == 'success') {
+                    this.result.examinee_no = response.data.examinee_no
+                    this.result.overall_score = response.data.overall_score
+                    this.result.total_score = response.data.total_score
 
+                    this.result.show = true
+                }
+                
+            }).catch((error) => {
+                console.log('Call the Administrator')
+            });
+        },
+        printExam() {
+            console.log('print')
+        }
     }
 }
 </script>

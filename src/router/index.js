@@ -15,6 +15,8 @@ import AdminAccountApproval from '../views/admin/AdminAccountApproval'
 import AdminExamination from '../views/admin/AdminExamination'
 import AdminExaminees from '../views/admin/AdminExaminees'
 import AdminCreateExamination from '../views/admin/AdminCreateExamination'
+import AdminManageExaminees from '../views/admin/AdminManageExaminees'
+import AdminViewResults from '../views/admin/AdminViewResults'
 
 Vue.use(VueRouter)
 
@@ -73,6 +75,18 @@ Vue.use(VueRouter)
     path: '/admin/create-examination',
     name: 'AdminCreateExamination',
     component: AdminCreateExamination
+  },
+  {
+    path: '/admin/examination/examinees',
+    name: 'AdminManageExaminees',
+    component: AdminManageExaminees,
+    props: true
+  },
+  {
+    path: '/admin/examination/examinees',
+    name: 'AdminViewResults',
+    component: AdminViewResults,
+    props: true
   }
 ]
 const router = new VueRouter({

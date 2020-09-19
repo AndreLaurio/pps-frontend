@@ -126,8 +126,6 @@
                     <v-btn :loading="loadingAddEx" color="#760D11" dark rounded v-on:click="addExamination"> Add the examanimation </v-btn>    
                 </v-row>
 
-                
-                <div>{{message}}</div>
             </v-container>
 
         </v-layout>
@@ -202,23 +200,22 @@ export default {
                 let i = this.question_types.map(item => item.question_type_code).indexOf('NNE')
                 this.question_types.splice(i, 1)
             }).catch((error) => {
-                // console.log(error.response)
-                console.log('error')
+                
+                console.log('Please call the Administrator')
             })
         },
         addExamination() {
             this.loadingAddEx = true
             axios.post('/api/exam/create', this.exam).then((response) => {
-                this.message = 'success'
                 this.loadingAddEx = false
+                this.$router.push({ name: 'AdminExamination' })
             }).catch((error) => {
                 this.loadingAddEx = false
-                this.message = 'error'
+
             })
         },
         addQuestion() {
             this.exam.exam_items.push(_.cloneDeep(this.exam_item))
-            this.message = 'add question'
         },
         addChoice(item) {
             console.log('add choice')
@@ -251,10 +248,9 @@ export default {
                         choice.is_correct = false
                     }
                 })
-                this.message = 'yes'
             }
             else {
-                this.message = 'no'
+
             }
         }
     }

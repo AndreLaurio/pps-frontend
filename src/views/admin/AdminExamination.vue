@@ -40,6 +40,13 @@
                                 <v-btn class="ma-2" outlined rounded color="red">
                                     <v-icon left>mdi-pencil</v-icon> Delete
                                 </v-btn>
+                                <v-divider></v-divider>
+                                <v-btn class="ma-2" outlined rounded color="red" @click="manageExaminees(exam.exam_id, exam.exam_title)">
+                                    <v-icon left>mdi-pencil</v-icon> Manage Examinees
+                                </v-btn>
+                                <v-btn class="ma-2" outlined rounded color="red" @click="viewResults(exam.exam_id, exam.exam_title)">
+                                    <v-icon left>mdi-pencil</v-icon> View Results
+                                </v-btn>
                             </v-container>
 
                         </v-expansion-panel-content>
@@ -94,6 +101,24 @@ export default {
                 this.message = 'success'
             }).catch((error) => {
                 this.message = 'error'
+            })
+        },
+        manageExaminees(exam_id, exam_title) {
+            this.$router.push({ 
+                name: 'AdminManageExaminees', 
+                params: {
+                    'exam_id': exam_id,
+                    'exam_title': exam_title
+                }
+            })
+        },
+        viewResults(exam_id, exam_title) {
+            this.$router.push({ 
+                name: 'AdminViewResults', 
+                params: {
+                    'exam_id': exam_id,
+                    'exam_title': exam_title
+                }
             })
         }
     }
