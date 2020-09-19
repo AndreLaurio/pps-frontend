@@ -11,7 +11,7 @@
                 <v-expansion-panels accordion>
                     <v-expansion-panel>
                         <v-expansion-panel-header>
-                            <h3>Exam Description</h3>
+                            <h3 class="colored-title">Exam Description</h3>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
 
@@ -23,23 +23,23 @@
                                 <v-text-field v-model="exam.time_duration" type="number" outlined label="Time Duration (in minutes)" :rules="tdRules" />
                                 <v-text-field v-model="exam.passing_score" type="number" outlined label="Passing Score" />
 
-                                <v-switch v-model="exam.is_randomized" label="Randomized Questions" />
+                                <v-switch  color="red darken-3" v-model="exam.is_randomized" label="Randomized Questions" />
 
                             </v-card-text>
 
                         </v-expansion-panel-content>
                     </v-expansion-panel>
 
-                    <v-expansion-panel>
+                    <v-expansion-panel class="mt-3">
                         <v-expansion-panel-header>
-                            <h3>Exam Questions</h3>
+                            <h3 class="colored-title">Exam Questions</h3>
                         </v-expansion-panel-header>
 
                         <v-expansion-panel-content>
                             
                             <v-card-text class="pl-12 pr-12">
                                 
-                                <v-card v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4">
+                                <v-card elevation="15" v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4">
 
                                     <v-textarea v-model="item.text" :counter="200" outlined :label="`Question #${item_no+1}`" :rows="3" />
 
@@ -73,20 +73,20 @@
                                                     <tr v-for="(choice, choice_no) in item.choices" :key="choice_no">
                                                         <td>{{toLetter(choice_no)}}</td>
                                                         <td>
-                                                            <v-textarea v-model="choice.label" :counter="200" outlined label="Label" :rows="2" />
+                                                            <v-textarea class="mt-2" v-model="choice.label" :counter="200" outlined label="Label" :rows="2" />
                                                         </td>
                                                         <td>
-                                                            <v-switch v-model="choice.is_correct" v-on:change="validateIsCorrect(item, choice_no)"/>
+                                                            <v-switch color="red darken-3" v-model="choice.is_correct" v-on:change="validateIsCorrect(item, choice_no)"/>
                                                         </td>
                                                         <td>
-                                                            <v-btn v-on:click="deleteChoice(item.choices, choice_no)">Delete</v-btn>
+                                                            <v-btn color="#760D11" dark v-on:click="deleteChoice(item.choices, choice_no)"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr v-if="item.question_type_code == 'MCQ'">
                                                         <td colspan="5">
-                                                            <v-text-field v-model="item.mcq_max_selection" type="number" outlined label="Max number of choices to be selected" />
+                                                            <v-text-field class="mt-2" v-model="item.mcq_max_selection" type="number" outlined label="Max number of choices to be selected" />
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -97,8 +97,8 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="float-right pa-2" colspan="4">
-                                                            <v-btn small outlined v-on:click="addChoice(item)"> Add a choice </v-btn>
+                                                        <td class="pa-2" colspan="4">
+                                                            <v-btn small color="#760D11" dark v-on:click="addChoice(item)"> Add a choice </v-btn>
                                                         </td>
                                                     </tr>
                                                 </tfoot>
@@ -110,7 +110,7 @@
                                 </v-card>
 
                                 
-                                 <v-btn small outlined v-on:click="addQuestion"> Add a question </v-btn>
+                                 <v-btn small color="#760D11" dark v-on:click="addQuestion"> Add a question </v-btn>
                                 
 
                             </v-card-text>
@@ -123,7 +123,7 @@
 
             <v-container>
                 <v-row>
-                    <v-btn color="#760D11" dark rounded v-on:click="addExamination"> Add the examanimation </v-btn>    
+                    <v-btn :loading="loadingAddEx" color="#760D11" dark rounded v-on:click="addExamination"> Add the examanimation </v-btn>    
                 </v-row>
 
                 
@@ -147,7 +147,9 @@
 .valerror{
     color:red;
 }
-
+.colored-title {
+    color: #760D11;
+}
 </style>
 
 <script>
@@ -177,7 +179,8 @@ export default {
             ],
 
             message: 'sample',
-            question_types: {}
+            question_types: {},
+            loadingAddEx:false,
         }
     },
     mounted(){
@@ -204,9 +207,12 @@ export default {
             })
         },
         addExamination() {
+            this.loadingAddEx = true
             axios.post('/api/exam/create', this.exam).then((response) => {
                 this.message = 'success'
+                this.loadingAddEx = false
             }).catch((error) => {
+                this.loadingAddEx = false
                 this.message = 'error'
             })
         },

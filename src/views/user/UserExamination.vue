@@ -16,8 +16,7 @@
             <v-flex>
                 <v-row>
                     <v-card v-for="exam in exams" :key="exam.exam_id" max-width="300" class="ml-5 mt-5">
-                        <v-img src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" width="300px"></v-img>
-                        <v-card-title>
+                        <v-card-title class="colored-title">
                             {{exam.exam_title}}
                         </v-card-title>
                         <v-card-text>
@@ -42,6 +41,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 .pop{
     font-family: 'Poppins', sans-serif;
+}
+.colored-title {
+    color: #760D11;
 }
 </style>
 
