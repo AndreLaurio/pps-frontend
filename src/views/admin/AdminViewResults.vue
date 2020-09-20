@@ -109,7 +109,14 @@ export default {
             }
         },
         viewAnswer(user_id) {
-            console.log('View Answer')
+            this.$router.push({ 
+                name: 'AdminViewAnswer',
+                params: {
+                    exam_id: this.exam_id,
+                    exam_title: this.exam_title,
+                    user_id: user_id
+                }
+            })
         }
     }
 }
