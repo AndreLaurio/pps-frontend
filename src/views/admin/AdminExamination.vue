@@ -16,7 +16,11 @@
         <v-layout row wrap class="mt-5">
             <v-flex xs12 sm12 md10 xl7>
 
-                <v-expansion-panels class="mt-3" accordion v-for="exam in exams" :key="exam.exam_id">
+                <v-alert :value="typeof success !== 'undefined' && success != ''" transition="fade-transition" type="success">
+                    {{success}}
+                </v-alert>
+
+                <v-expansion-panels class="mt-3" accordion v-for="(exam, exam_no) in exams" :key="exam.exam_id">
                     <v-expansion-panel>
                         <v-expansion-panel-header>
                             <h3 class="colored-title">{{exam.exam_title}}</h3>
@@ -34,10 +38,10 @@
                                 <v-btn class="ma-2" outlined rounded color="grey">
                                     <v-icon left>mdi-visibility</v-icon> View
                                 </v-btn>
-                                <v-btn class="ma-2" outlined rounded color="success">
+                                <v-btn class="ma-2" outlined rounded color="success" @click="editExamConfirm(exam.exam_id)">
                                     <v-icon left>mdi-pencil</v-icon> Edit
                                 </v-btn>
-                                <v-btn class="ma-2" outlined rounded color="red">
+                                <v-btn class="ma-2" outlined rounded color="red" @click="deleteExamConfirm(exam.exam_id, exam_no)">
                                     <v-icon left>mdi-pencil</v-icon> Delete
                                 </v-btn>
                                 <v-divider></v-divider>
@@ -54,6 +58,36 @@
                 </v-expansion-panels>
 
             </v-flex>
+
+            <v-container>
+                <v-dialog v-model="delExamDialog.show" persistent max-width="290">
+                    <v-card>
+                        <v-card-title class="headline">Delete Exam</v-card-title>
+                        <v-card-text>{{delExamDialog.message}}</v-card-text>
+                        <v-card-text>All the examinees' records of taking or taken the exam will also be deleted.</v-card-text>
+                        <v-card-text>Are you sure to delete the exam?</v-card-text>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="delExamDialog.show = false">No</v-btn>
+                        <v-btn color="green darken-1" text @click="deleteExam()">Yes, continue</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+
+                <v-dialog v-model="editExamDialog.show" persistent max-width="290">
+                    <v-card>
+                        <v-card-title class="headline">Edit Exam</v-card-title>
+                        <v-card-text>{{editExamDialog.message}}</v-card-text>
+                        <v-card-text>All the examinees already taken the exam will not be updated.</v-card-text>
+                        <v-card-text>Are you sure to edit the exam?</v-card-text>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="editExamDialog.show = false">No</v-btn>
+                        <v-btn color="green darken-1" text @click="editExam()">Yes, continue</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-container>
         </v-layout>
         <v-main>
             <AdminDashboard/>
@@ -82,10 +116,27 @@ export default {
     components:{
         AdminDashboard
     },
+    props: {
+        success: {
+            type: String,
+            default: ''
+        }
+    },
     data() {
         return {
             exams: [],
-            message: ''
+            message: '',
+            delExamDialog: {
+                show: false,
+                message: '',
+                exam_id: '',
+                exam_no: 0
+            },
+            editExamDialog: {
+                show: false,
+                message: '',
+                exam_id: 0
+            }
         }
     },
     mounted() {
@@ -118,6 +169,57 @@ export default {
                 params: {
                     'exam_id': exam_id,
                     'exam_title': exam_title
+                }
+            })
+        },
+        deleteExamConfirm(exam_id, exam_no) {
+
+            axios.post('/api/exam/examinees/count', {
+                exam_id: exam_id
+            }).then((response) => {
+
+                this.delExamDialog.exam_id = exam_id
+                this.delExamDialog.exam_no = exam_no
+                this.delExamDialog.message = response.data.message
+                this.delExamDialog.show = true
+
+            }).catch((error) => {
+                console.log('Call the Administrator')
+            })
+        },
+        deleteExam() {
+            axios.post('/api/exam/delete', {
+                exam_id: this.delExamDialog.exam_id
+            }).then((response) => {
+                
+                this.exams.splice(this.delExamDialog.exam_no, 1)
+                this.delExamDialog.show = false
+
+                this.success = 'The exam is successfully deleted.'
+
+            }).catch((error) => {
+                console.log('Call the Administrator')
+            })
+        },
+        editExamConfirm(exam_id) {
+
+            axios.post('/api/exam/examinees/count', {
+                exam_id: exam_id
+            }).then((response) => {
+
+                this.editExamDialog.exam_id = exam_id
+                this.editExamDialog.message = response.data.message
+                this.editExamDialog.show = true
+
+            }).catch((error) => {
+                console.log('Call the Administrator')
+            })
+        },
+        editExam() {
+            this.$router.push({ 
+                name: 'AdminEditExam', 
+                params: {
+                    'exam_id': this.editExamDialog.exam_id
                 }
             })
         }

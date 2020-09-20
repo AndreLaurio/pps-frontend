@@ -2,7 +2,7 @@
     <div class="pop ml-12 mt-12">
         <v-layout row wrap>
             <v-flex>
-                <h1>Create Examination</h1>
+                <h1>Edit Examination</h1>
             </v-flex>
         </v-layout>
         
@@ -91,7 +91,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td colspan="5">
-                                                            <v-alert dense outlined type="error" :value="item.alert">
+                                                            <v-alert dense outlined type="error" :value="typeof item.alert !== 'undefined' && item.alert">
                                                                 {{ item.message }}
                                                             </v-alert>
                                                         </td>
@@ -123,7 +123,7 @@
 
             <v-container>
                 <v-row>
-                    <v-btn :loading="loadingAddEx" color="#760D11" dark rounded v-on:click="addExamination"> Add the examination </v-btn>    
+                    <v-btn :loading="loadingUpdateEx" color="#760D11" dark rounded v-on:click="updateExam"> Update the examination </v-btn>    
                 </v-row>
 
             </v-container>
@@ -164,6 +164,12 @@ export default {
     components:{
         AdminDashboard
     },
+    props: {
+        exam_id: {
+            type: Number,
+            default: 0
+        }
+    },
     data(){
         return{
             exam:{},
@@ -178,13 +184,42 @@ export default {
 
             message: 'sample',
             question_types: {},
-            loadingAddEx:false,
+            loadingUpdateEx:false,
         }
     },
     mounted(){
-        this.getFreshExamObj()
+        this.loadExam()
     },
     methods:{
+        loadExam() {
+
+            if (this.exam_id == 0) {
+                this.$router.push({ name: 'AdminExamination' })
+            }
+            else {
+                axios.post('/api/exam/edit/get', {
+                    exam_id: this.exam_id
+                }).then((response) => {
+
+                    this.exam = response.data.exam
+                    this.exam_item = response.data.exam_item
+                    this.exam_group = response.data.exam_group
+                    this.question_types = response.data.question_types
+                    this.exam_choice = response.data.exam_choice
+
+                    this.exam.exam_groups = []
+                    this.exam.exam_groups.push(_.cloneDeep(this.exam_group))
+
+                    // Removing NNE choice
+                    let i = this.question_types.map(item => item.question_type_code).indexOf('NNE')
+                    this.question_types.splice(i, 1)
+
+                }).catch((error) => {
+                    
+                    console.log('Please call the Administrator')
+                })
+            }
+        },
         getFreshExamObj() {
             axios.get('/api/exam/fresh').then((response) => {
                 this.exam = response.data.exam
@@ -204,18 +239,18 @@ export default {
                 console.log('Please call the Administrator')
             })
         },
-        addExamination() {
-            this.loadingAddEx = true
-            axios.post('/api/exam/create', this.exam).then((response) => {
-                this.loadingAddEx = false
+        updateExam() {
+            this.loadingUpdateEx = true
+            axios.post('/api/exam/edit', this.exam).then((response) => {
+                this.loadingUpdateEx = false
                 this.$router.push({ 
                     name: 'AdminExamination',
                     params: {
-                        'success': 'The exam is successfully created.'
+                        'success': 'The exam is successfully updated.'
                     }
                 })
             }).catch((error) => {
-                this.loadingAddEx = false
+                this.loadingUpdateEx = false
 
             })
         },

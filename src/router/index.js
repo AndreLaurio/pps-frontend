@@ -17,6 +17,7 @@ import AdminExaminees from '../views/admin/AdminExaminees'
 import AdminCreateExamination from '../views/admin/AdminCreateExamination'
 import AdminManageExaminees from '../views/admin/AdminManageExaminees'
 import AdminViewResults from '../views/admin/AdminViewResults'
+import AdminEditExam from '../views/admin/AdminEditExam'
 
 Vue.use(VueRouter)
 
@@ -69,7 +70,8 @@ Vue.use(VueRouter)
   {
     path: '/admin/examination',
     name: 'AdminExamination',
-    component: AdminExamination
+    component: AdminExamination,
+    props: true
   },
   {
     path: '/admin/create-examination',
@@ -86,6 +88,12 @@ Vue.use(VueRouter)
     path: '/admin/examination/examinees',
     name: 'AdminViewResults',
     component: AdminViewResults,
+    props: true
+  },
+  {
+    path: '/admin/examination/edit',
+    name: 'AdminEditExam',
+    component: AdminEditExam,
     props: true
   }
 ]
