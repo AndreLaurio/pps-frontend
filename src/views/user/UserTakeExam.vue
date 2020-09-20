@@ -1,8 +1,5 @@
 <template>
     <div class="pop mt-12 ml-12">
-        <p>{{message}}</p>
-
-
         <div class="text-center mr-12">
             <v-progress-circular v-if="loading == true"
                 :rotate="90"

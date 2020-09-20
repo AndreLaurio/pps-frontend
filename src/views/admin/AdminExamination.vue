@@ -35,7 +35,7 @@
                             <p v-if="exam.is_randomized == true"><b>Randomized</b></p>
 
                             <v-container class="text-center">
-                                <v-btn class="ma-2" outlined rounded color="grey">
+                                <v-btn class="ma-2" outlined rounded color="grey" @click="viewExam(exam.exam_id)">
                                     <v-icon left>mdi-visibility</v-icon> View
                                 </v-btn>
                                 <v-btn class="ma-2" outlined rounded color="success" @click="editExamConfirm(exam.exam_id)">
@@ -220,6 +220,14 @@ export default {
                 name: 'AdminEditExam', 
                 params: {
                     'exam_id': this.editExamDialog.exam_id
+                }
+            })
+        },
+        viewExam(exam_id) {
+            this.$router.push({ 
+                name: 'AdminViewExam', 
+                params: {
+                    'exam_id': exam_id
                 }
             })
         }
