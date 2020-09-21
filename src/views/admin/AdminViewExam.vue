@@ -1,7 +1,7 @@
 <template>
     <div class="pop mt-12 ml-12">
         <v-container>
-            <v-card class="mx-auto rounded-xl card-border" elevation="15" max-width="800" outlined>
+            <v-card class="mx-auto rounded-xl card-border" max-width="800" outlined>
                 <v-card-title class="mt-5 pl-12">
                     <h3 class="pop exam-warning">{{exam.exam_title}}</h3>
                 </v-card-title>
@@ -94,7 +94,7 @@
     color: #760D11;
 }
 .card-border{
-    border: 4px solid #760D11;
+    border: 3px solid #760D11;
 }
 </style>
 

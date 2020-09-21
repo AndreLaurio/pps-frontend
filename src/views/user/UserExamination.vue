@@ -15,7 +15,10 @@
         <v-layout v-if="result.show == false">
             <v-flex>
                 <v-row>
-                    <v-card v-for="exam in exams" :key="exam.exam_id" max-width="300" class="ml-5 mt-5">
+                    <div>
+                        {{isEmpty}}
+                    </div>
+                    <v-card v-for="exam in exams" :key="exam.exam_id" width="300" class="ml-5 mt-5">
                         <v-card-title class="colored-title">
                             {{exam.exam_title}}
                         </v-card-title>
@@ -25,7 +28,7 @@
                             <v-spacer></v-spacer>
                             <p v-if="exam.exam_status_code == 'F'" color="error">Finished</p>
                         </v-card-text>
-                        <v-card-actions>
+                        <v-card-actions class="mb-3">
                             <v-spacer></v-spacer>
                             <v-btn v-if="exam.exam_status_code == 'N'" class="primary red accent-4" v-on:click="takeExam(exam.exam_id)">Take Exam</v-btn>
                             <v-btn v-if="exam.exam_status_code == 'O'" class="primary red accent-4" v-on:click="takeExam(exam.exam_id)">Continue Exam</v-btn>
@@ -100,6 +103,7 @@ export default {
             exams: [],
             message: 'sample',
             loading:true,
+            isEmpty:'',
             interval: {},
             value: 0,
             dialog: {
@@ -136,7 +140,13 @@ export default {
             axios.post('/api/examinee/exams', {
                 user_id: this.user_id
             }).then((response) => {
-                this.exams = response.data
+                // this.exams = response.data
+                let a = response.data
+                if(a == ''){
+                    this.isEmpty = 'Walang exam'
+                }else{
+                    this.exams = response.data
+                }
                 this.loading = false
             }).catch((error) => {
                 console.log('Please call the adminsitrator')

@@ -200,7 +200,7 @@ export default {
                         let user_type_id = response.data.user_type_id
                         if(is_approved == 1){
                             if(user_type_id == 2){
-                                this.$router.push({ name: 'User' })
+                                this.$router.push({ name: 'UserExamination' })
                             } else if(user_type_id == 1){
                                 this.$router.push({ name: 'Admin' })
                             } else if(user_type_id == 3){

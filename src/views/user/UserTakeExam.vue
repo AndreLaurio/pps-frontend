@@ -92,12 +92,12 @@
                 <v-row justify="center">
                     <v-dialog v-model="timer.timerDialogShow" persistent max-width="290">
                         <v-card>
-                            <v-card-title class="headline">Time's up!</v-card-title>
+                            <v-card-title class="pop"><h3>Time's up!</h3></v-card-title>
                             <v-card-text>Your time is already finished.</v-card-text>
                             <v-card-text>Any changes from here will not be saved. Please submit your answer.</v-card-text>
                             <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="green darken-1" text @click="submitAnswer">Yes, submit my answer</v-btn>
+                            <v-btn color="primary" text @click="submitAnswer">Yes, submit my answer</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -114,12 +114,12 @@
                             </v-btn>
                         </template>
                         <v-card>
-                            <v-card-title class="headline">Submission</v-card-title>
+                            <v-card-title class="pop"><h3>Submission</h3></v-card-title>
                             <v-card-text>Are you sure to submit your answer?</v-card-text>
                             <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="green darken-1" text @click="submitAnswerDialog = false">No</v-btn>
-                            <v-btn color="green darken-1" text @click="submitAnswer" :loading="loadingSubmit">Yes, continue</v-btn>
+                            <v-btn color="error" text @click="submitAnswerDialog = false">No</v-btn>
+                            <v-btn color="primary" text @click="submitAnswer" :loading="loadingSubmit">Yes, continue</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -133,7 +133,7 @@
                 </v-card-title>
                 <v-card-text class="pl-12 mr-5">
                     
-                        <div class="exam-warning">
+                        <div>
                             <b>Examinee no: </b>{{result.examinee_no}}<br>
                             <b>Score: </b>{{result.overall_score}}/{{result.total_score}} <br>
                             <p>Wait for admin@gmail.com to message you for interview for details.</p>

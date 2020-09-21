@@ -24,7 +24,7 @@
                     <v-expansion-panel>
                         <v-expansion-panel-header>
                             <h3 class="colored-title">{{exam.exam_title}}</h3>
-                            <span><b>Last update: </b>{{exam.updated_on_f}}</span>
+                            <span class="text-right"><b>Last update: </b>{{exam.updated_on_f}}</span>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
 
@@ -35,21 +35,21 @@
                             <p v-if="exam.is_randomized == true"><b>Randomized</b></p>
 
                             <v-container class="text-center">
-                                <v-btn class="ma-2" outlined rounded color="grey" @click="viewExam(exam.exam_id)">
-                                    <v-icon left>mdi-visibility</v-icon> View
+                                <v-btn class="ma-2" outlined rounded color="teal darken-4" @click="viewExam(exam.exam_id)">
+                                    <v-icon left>mdi-eye</v-icon> View
                                 </v-btn>
                                 <v-btn class="ma-2" outlined rounded color="success" @click="editExamConfirm(exam.exam_id)">
                                     <v-icon left>mdi-pencil</v-icon> Edit
                                 </v-btn>
                                 <v-btn class="ma-2" outlined rounded color="red" @click="deleteExamConfirm(exam.exam_id, exam_no)">
-                                    <v-icon left>mdi-pencil</v-icon> Delete
+                                    <v-icon left>mdi-delete</v-icon> Delete
                                 </v-btn>
                                 <v-divider></v-divider>
-                                <v-btn class="ma-2" outlined rounded color="red" @click="manageExaminees(exam.exam_id, exam.exam_title)">
-                                    <v-icon left>mdi-pencil</v-icon> Manage Examinees
+                                <v-btn class="ma-2" outlined rounded color="light-blue darken-3" @click="manageExaminees(exam.exam_id, exam.exam_title)">
+                                    <v-icon left>mdi-account-group</v-icon> Manage Examinees
                                 </v-btn>
-                                <v-btn class="ma-2" outlined rounded color="red" @click="viewResults(exam.exam_id, exam.exam_title)">
-                                    <v-icon left>mdi-pencil</v-icon> View Results
+                                <v-btn class="ma-2" outlined rounded color="deep-orange darken-1" @click="viewResults(exam.exam_id, exam.exam_title)">
+                                    <v-icon left>mdi-folder-account</v-icon> View Results
                                 </v-btn>
                             </v-container>
 
@@ -61,29 +61,29 @@
 
             <v-container>
                 <v-dialog v-model="delExamDialog.show" persistent max-width="290">
-                    <v-card>
-                        <v-card-title class="headline">Delete Exam</v-card-title>
+                    <v-card class="pop">
+                        <v-card-title class="pop"><h3>Delete Exam</h3></v-card-title>
                         <v-card-text>{{delExamDialog.message}}</v-card-text>
                         <v-card-text>All the examinees' records of taking or taken the exam will also be deleted.</v-card-text>
                         <v-card-text>Are you sure to delete the exam?</v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="delExamDialog.show = false">No</v-btn>
-                        <v-btn color="green darken-1" text @click="deleteExam()">Yes, continue</v-btn>
+                        <v-btn color="error" text @click="delExamDialog.show = false">No</v-btn>
+                        <v-btn color="primary" text @click="deleteExam()">Yes, continue</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
 
                 <v-dialog v-model="editExamDialog.show" persistent max-width="290">
-                    <v-card>
-                        <v-card-title class="headline">Edit Exam</v-card-title>
+                    <v-card class="pop">
+                        <v-card-title class="pop"><h3>Edit Exam</h3></v-card-title>
                         <v-card-text>{{editExamDialog.message}}</v-card-text>
                         <v-card-text>All the examinees already taken the exam will not be updated.</v-card-text>
                         <v-card-text>Are you sure to edit the exam?</v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="editExamDialog.show = false">No</v-btn>
-                        <v-btn color="green darken-1" text @click="editExam()">Yes, continue</v-btn>
+                        <v-btn color="error" text @click="editExamDialog.show = false">No</v-btn>
+                        <v-btn color="primary" text @click="editExam()">Yes, continue</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>

@@ -6,11 +6,11 @@
                 sample image
             </v-flex>
             <v-flex xs12 sm12 md8 xl6>
-                <v-card class="rounded-xl" elevation="5">
+                <v-card class="rounded-xl" max-width="700" elevation="5">
                     <v-card-title>
                         <span class="ml-5 mt-5">Details</span> 
                     </v-card-title>
-                    <v-card-text class="ml-7">
+                    <v-card-text class="ml-12">
                         <v-layout>
                             <v-flex>
                                 First Name<v-text-field solo dense v-model="user_details.first_name"></v-text-field>
@@ -45,16 +45,16 @@
                             </v-flex>
                         </v-layout>
                         <div>
-                            <v-btn class="primary red accent-4 mr-5" v-on:click="changeDetails">Change Details</v-btn>
+                            <v-btn class="primary red accent-4 mr-5 mb-5" v-on:click="changeDetails">Change Details</v-btn>
                         </div>
                     </v-card-text>
                 </v-card>
 
-                 <v-card class="rounded-xl mt-12" elevation="5">
+                 <v-card class="rounded-xl mt-12" max-width="700" elevation="5">
                     <v-card-title>
                         <span class="ml-5 mt-5">Change Password</span>
                     </v-card-title>
-                    <v-card-text class="ml-7">
+                    <v-card-text class="ml-12">
                         <v-layout>
                             <v-flex>
                                 Email<v-text-field dense solo v-model="user_password.email"  :rules="emailRules" :counter="30" required></v-text-field>
