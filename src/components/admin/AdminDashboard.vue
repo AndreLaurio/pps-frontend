@@ -12,20 +12,12 @@
                         </div>
                     </v-list-item-content>
                 </v-list> 
-                <v-list-item link>
+                 <v-list-item link>
                     <v-list-item-action>
-                        <v-icon color="#760D11">mdi-home</v-icon>
+                        <v-icon color="#760D11">mdi-face</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
-                        Home
-                    </v-list-item-content>
-                </v-list-item>
-                 <v-list-item link v-on:click="adminExaminees">
-                    <v-list-item-action>
-                        <v-icon color="#760D11">mdi-account-supervisor</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        Examinees
+                        Profile
                     </v-list-item-content>
                 </v-list-item>
                   <v-list-item link v-on:click="adminExamination">
@@ -109,9 +101,6 @@ export default {
         },
         accountApproval(){
             this.$router.push({ name: 'AdminAccountApproval' })
-        },
-        adminExaminees(){
-            this.$router.push({ name: 'AdminExaminees' })
         },
         adminExamination(){
             this.$router.push({ name: 'AdminExamination' })

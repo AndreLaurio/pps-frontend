@@ -28,8 +28,8 @@
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn v-if="exam.exam_status_code == 'N'" class="primary red accent-4" v-on:click="takeExam(exam.exam_id)">Take Exam</v-btn>
-                            <v-btn v-if="exam.exam_status_code == 'O'" class="primary orange accent-4" v-on:click="takeExam(exam.exam_id)">Continue Exam</v-btn>
-                            <v-btn v-if="exam.exam_status_code == 'F'" class="primary blue accent-4" @click="viewResult(exam.exam_id)">View Result</v-btn>
+                            <v-btn v-if="exam.exam_status_code == 'O'" class="primary red accent-4" v-on:click="takeExam(exam.exam_id)">Continue Exam</v-btn>
+                            <v-btn v-if="exam.exam_status_code == 'F'" class="primary red accent-4" @click="viewResult(exam.exam_id)">View Result</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-row>
