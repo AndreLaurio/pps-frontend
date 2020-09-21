@@ -1,13 +1,13 @@
 <template>
     <div class="pop mt-12 ml-12">
         <v-container>
-            <v-card class="mx-auto rounded-xl card-border" elevation="15" max-width="800" outlined>
+            <v-card class="mx-auto rounded-xl card-border" elevation="8 " max-width="800" outlined>
                 <v-card-title class="mt-5 pl-12">
                     <h3 class="pop exam-warning">Exam Result</h3>
                 </v-card-title>
                 <v-card-text class="pl-12 mr-5">
                     
-                    <div class="exam-warning">
+                    <div>
                         <b>Examinee no: </b>{{result.examinee_no}}<br>
                         <b>Score: </b>{{result.overall_score}}/{{result.total_score}} <br>
                         <p>Wait for admin@gmail.com to message you for interview for details.</p>
@@ -93,7 +93,7 @@
     color: #760D11;
 }
 .card-border{
-    border: 4px solid #760D11;
+    border: 3px solid #760D11;
 }
 </style>
 

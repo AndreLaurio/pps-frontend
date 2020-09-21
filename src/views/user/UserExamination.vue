@@ -1,6 +1,5 @@
 <template>
     <div class="pop mt-5 ml-12">
-        <h2 class="mb-7">Examination</h2>
             <div class="text-center mr-12">
                 <v-progress-circular v-if="loading == true"
                     :rotate="90"
@@ -53,7 +52,7 @@
         </v-layout>
 
         <v-layout v-if="result.show == true">
-            <v-card class="mx-auto rounded-xl card-border" elevation="15" max-width="800" outlined>
+            <v-card class="mx-auto rounded-xl card-border" elevation="8" max-width="800" outlined>
                 <v-card-title class="mt-5 pl-12">
                     <h3 class="pop exam-warning">Exam Result</h3>
                 </v-card-title>
@@ -86,6 +85,9 @@
 }
 .colored-title {
     color: #760D11;
+}
+.card-border{
+    border: 3px solid #760D11;
 }
 </style>
 

@@ -112,13 +112,13 @@
                     <v-container>
                         <v-dialog v-model="delExamineeDialog.show" persistent max-width="290">
                             <v-card>
-                                <v-card-title class="headline">Remove Examinee</v-card-title>
+                                <v-card-title class="pop"><h3>Remove Examinee</h3></v-card-title>
                                 <v-card-text>{{delExamineeDialog.message}}</v-card-text>
                                 <v-card-text>Are you sure to remove the examinee from the exam?</v-card-text>
                                 <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" text @click="delExamineeDialog.show = false">No</v-btn>
-                                <v-btn color="green darken-1" text @click="delExaminee()">Yes, continue</v-btn>
+                                <v-btn color="error" text @click="delExamineeDialog.show = false">No</v-btn>
+                                <v-btn color="primary" text @click="delExaminee()">Yes, continue</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>

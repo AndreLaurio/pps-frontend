@@ -31,7 +31,7 @@
                                 </td>
                                 <td class="text-center">
                                     <span v-if="examinee.item.exam_status_code == 'N'">NO ANSWER</span>
-                                    <v-btn v-if="examinee.item.exam_status_code != 'N'" class="mx-2 blue" small @click="viewAnswer(examinee.item.user_id)"><v-icon>mdi-eye</v-icon> View Answer</v-btn>
+                                    <v-btn v-if="examinee.item.exam_status_code != 'N'" class="mx-2 primary" small @click="viewAnswer(examinee.item.user_id)"><v-icon>mdi-eye</v-icon> View Answer</v-btn>
                                 </td>
                             </tr>
                         </template>

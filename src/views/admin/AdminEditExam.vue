@@ -39,7 +39,7 @@
                             
                             <v-card-text class="pl-12 pr-12">
                                 
-                                <v-card elevation="15" v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4">
+                                <v-card elevation="10" v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4">
 
                                     <v-textarea v-model="item.text" :counter="200" outlined :label="`Question #${item_no+1}`" :rows="3" />
 
