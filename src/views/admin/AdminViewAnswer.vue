@@ -56,7 +56,7 @@
                         </div>
 
                         <div v-if="item.question_type_code == 'FTQ'" class="ml-10">
-                            <v-textarea v-model="item.answer" :counter="200" outlined placeholder="Please write your answer." :rows="3" disabled />
+                            <v-textarea v-model="item.answer" :counter="200" outlined placeholder="Please write your answer." :rows="3" readonly />
                         </div>
 
                         <div>

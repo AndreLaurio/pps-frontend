@@ -23,7 +23,7 @@
                                 <v-text-field v-model="exam.time_duration" type="number" outlined label="Time Duration (in minutes)" :rules="tdRules" />
                                 <v-text-field v-model="exam.passing_score" type="number" outlined label="Passing Score" />
 
-                                <v-switch  color="red darken-3" v-model="exam.is_randomized" label="Randomized Questions" />
+                                <!-- <v-switch  color="red darken-3" v-model="exam.is_randomized" label="Randomized Questions" /> -->
 
                             </v-card-text>
 

@@ -36,6 +36,15 @@
             <v-container v-if="is_taking_exam == true && has_result == false">
 
                 <h2 class="pop exam-warning">{{exam.exam_title}}</h2>
+                
+                <v-banner
+                    single-line
+                    :sticky="timer.sticky"
+                    class="pa-4 mt-4 text-right"
+                    elevation="1"
+                    >
+                    {{timer.time}}
+                </v-banner>
 
                 <v-card-text class="pl-12 pr-12">
                     <v-card elevation="15" v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4 rounded-xl">
@@ -81,6 +90,19 @@
                 </v-card-text>
 
                 <v-row justify="center">
+                    <v-dialog v-model="timer.timerDialogShow" persistent max-width="290">
+                        <v-card>
+                            <v-card-title class="headline">Time's up!</v-card-title>
+                            <v-card-text>Your time is already finished.</v-card-text>
+                            <v-card-text>Any changes from here will not be saved. Please submit your answer.</v-card-text>
+                            <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" text @click="submitAnswer">Yes, submit my answer</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+
+
                     <v-dialog v-model="submitAnswerDialog" persistent max-width="290">
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn
@@ -146,6 +168,7 @@
 <script>
 import UserDashboard from '@/components/user/UserDashboard'
 import axios from 'axios'
+import moment from 'moment'
  
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = 'http://localhost:8000'
@@ -154,7 +177,6 @@ export default {
     data(){
         return{
             submitAnswerDialog: false,
-            exam_id: '',
             user_id: '',
             exam: [],
             answers: [],
@@ -171,7 +193,22 @@ export default {
             has_result: false,
             result: {},
             taking_exam_message: '',
-            continue_exam: false
+            continue_exam: false,
+
+            timer: {
+                t: null,
+                time: '00:00:00',
+                time_start: 0,
+                time_duration: 0,
+                stop: false,
+                save_point: 2, // in seconds
+                save_point_counter: 0,
+
+                is_starting_point: true,
+
+                timerDialogShow: false,
+                sticky: true
+            }
         }
     },
     components:{
@@ -243,6 +280,19 @@ export default {
 
                 }).then((response) => {
 
+                    this.timer.time_duration = response.data.time_duration
+                    this.timer.time_start = moment(response.data.time_start, 'YYYY-MM-DD hh:mm:ss')
+                    
+                    if (response.data.exam_status_code == 'O') {
+                        this.exam = response.data.exam
+                    }
+
+                    this.runTimer()
+
+                    this.timer.t = setInterval(() => {
+                                        this.runTimer()
+                                    }, 1000)
+
                 }).catch((error) => {
                     console.log('Call the Administrator')
                 })
@@ -302,7 +352,70 @@ export default {
         },
         continueExam() {
             console.log('continue')
+        },
+        runTimer() {
+
+            if (this.timer.stop == false) {
+
+                var now = moment()
+                var date = moment(this.timer.time_start).add(this.timer.time_duration, 'minutes')
+                var s = moment(date).diff(now, 'seconds')
+
+                if (s <= 0) {
+                    this.timer.time = '00:00:00'
+                    this.timer.stop = true
+                    clearInterval(this.timer.t)
+                    this.timer.timerDialogShow = true
+
+                    if (this.timer.is_starting_point != true) {
+                        this.saveExamAnswer()
+                    }
+                    
+                }
+                else {
+                    this.timer.time = this.hhmmss(s)
+                    this.timer.is_starting_point = false
+                }
+
+                if (++this.timer.save_point_counter > this.timer.save_point) {
+
+                    this.saveExamAnswer()
+                    this.timer.save_point_counter = 0
+                }
+            }
+
+            
+        }, 
+        saveExamAnswer() {
+
+            axios.post('/api/exam/take/save_point', {
+                user_id: this.user_id,
+                exam_id: this.exam.exam_id,
+                exam: this.exam
+            }).then((response) => {
+                
+                if (response.data.time == '00:00:00') {
+                    this.timer.time = response.data.time
+                    this.timer.stop = true
+                }
+
+            }).catch((error) => {
+                console.log('Please contact the Administrator.')
+            })
+        },
+
+        hhmmss(s) {
+
+            var m = Math.floor(s / 60)
+            s = s % 60
+            var h = Math.floor(m / 60)
+            m = m % 60
+            return `${this.pad(h)}:${this.pad(m)}:${this.pad(s)}`
+        },
+        pad(n) {
+            return ("0" + n).slice(-2);
         }
+
     }
 }
 </script>
