@@ -61,8 +61,8 @@
                         <h2>Dear {{register_data.first_name}},</h2> 
                     </div>
                     <div class="mt-5">
-                        <p> <span class="ml-5">Please wait for the approval of your request.</span> <br>
-                        It might take 1-2 days to verify your account. <br>
+                        <p> <span class="ml-5">Please wait for the approval of your request.</span>
+                        It might take <br> 1-2 days to verify your account. <br> <br>
                         This is to guarantee that all sellers are credible.
                         </p>
                     </div>
@@ -71,7 +71,7 @@
                          <h4>Administrator</h4>
                     </div>
                     <div>
-                        <v-btn class="pl-12 pr-12 mt-5" v-on:click="returnIndex" :loading="returnLoading"> Home </v-btn>
+                        <v-btn class="pl-12 pr-12 mt-10" v-on:click="returnIndex" :loading="returnLoading"> Home </v-btn>
                     </div>
                 </div>
             </v-flex>
