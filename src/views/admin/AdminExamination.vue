@@ -187,10 +187,13 @@ export default {
             this.$router.push({ name: 'AdminCreateExamination' })
         },
         loadExams(page_url) {
-            page_url = page_url || '/api/exams'
+            let main_url = '/api/exams'
+            page_url = page_url || main_url
+            console.log(page_url)
             axios.get(page_url).then((response) => {
                 this.exams = response.data.data
                 this.makePagination(response.data)
+                console.log(response.data)
                 this.loading = false
             }).catch((error) => {
                 this.message = 'error'
