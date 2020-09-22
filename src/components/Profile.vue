@@ -3,13 +3,27 @@
         <h2 class="mb-12">Profile</h2>
         <v-layout justify-center>
             <v-flex xs12 sm12 md3 xl3>
-                sample image
+                <v-card flat tile class="d-flex">
+                    <v-img
+                        :src="photo.src"
+                        aspect-ratio="1"
+                        class="grey lighten-2"
+                    >
+                    </v-img>
+              </v-card>
+
+                <input type="file" @change="previewImage" :model="photo.img" label="File input"  prepend-icon="mdi-camera" outlined dense></v-file-input>
+                <p>{{photo.message}}</p>
+                <v-btn class="primary red accent-4 mr-5 mb-5" v-on:click="changePhoto">Change Photo</v-btn>
             </v-flex>
             <v-flex xs12 sm12 md8 xl6>
                 <v-card class="rounded-xl" max-width="700" elevation="5">
-                    <v-card-title>
-                        <span class="ml-5 mt-5">Details</span> 
-                    </v-card-title>
+                    <v-card-text>
+                        <v-layout>
+                            <span class="ml-5 mt-5">Details</span> 
+
+                        </v-layout>
+                    </v-card-text>
                     <v-card-text class="ml-12">
                         <v-layout>
                             <v-flex>
@@ -124,6 +138,12 @@ export default {
             },
             show_password: false,
             confirmation_password:false,
+
+            photo: {
+                img: '',
+                src: '',
+                message: ''
+            }
         }
     },
     watch: {
@@ -173,7 +193,52 @@ export default {
         },
         save (date) {
             this.$refs.menu.save(date)
-      },
+        },
+        changePhoto() {
+            
+            if (this.photo.img == '') {
+                this.photo.message = 'Please select a photo.'
+                return
+            }
+            if (this.photo.img['type'] !=='image/jpeg' && this.photo.img['type'] !=='image/png') {
+                this.photo.message = 'Please select a photo.'
+                return
+            }
+
+            const config = {
+                headers: { 'content-type': 'multipart/form-data' }
+            }
+
+            let formData = new FormData()
+            formData.append('photo_img', this.photo.img)
+            formData.append('user_id', this.user_id)
+
+            axios.post(
+                `/api/changephoto/${this.user_id}`, formData, config
+            ).then((response) => {
+                this.photo.message = 'The photo changed successfully.'
+            }).catch((error) => {
+                console.log('Please contat the Administrator.')
+            })
+        },
+        previewImage(e) {
+            var files = e.target.files
+
+            if (files.length != 1) {
+                this.photo.src = ''
+                this.photo.message = 'Please select a photo.'
+            }
+            else if (files[0]['type']==='image/jpeg' || files[0]['type']==='image/png') {
+                const file = e.target.files[0]
+                this.photo.src = URL.createObjectURL(file)
+                this.photo.img = e.target.files[0]
+                this.photo.message = ''
+            }
+            else {
+                this.photo.src = ''
+                this.photo.message = 'Please select a photo.'
+            }
+        }
     }
 }
 </script>
