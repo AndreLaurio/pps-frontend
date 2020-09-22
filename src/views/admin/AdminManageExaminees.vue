@@ -229,7 +229,7 @@ export default {
             axios.get(`/api/exam/examinees/not/${this.exam_id}`).then((response) => {
                 this.examinees = response.data
             }).catch((error) => {
-                console.log('Call the Administrator')
+                console.log(error.respose.data)
             })
         },
         removeExamineeConfirm(user_id, item) {

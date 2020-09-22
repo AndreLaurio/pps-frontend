@@ -1,7 +1,18 @@
 <template>
     <div class="pop mt-12 ml-12">
+        <div class="text-center mr-12">
+                <v-progress-circular v-if="loading == true"
+                    :rotate="90"
+                    :size="100"
+                    :width="15"
+                    :value="value"
+                    color="red"
+                    >
+                    {{ value }}
+                </v-progress-circular>
+            </div>
         <v-container>
-            <v-card class="mx-auto rounded-xl card-border" max-width="800" outlined>
+            <v-card class="mx-auto rounded-xl card-border" v-if="loading == false" max-width="800" outlined>
                 <v-card-title class="mt-5 pl-12">
                     <h3 class="pop exam-warning">{{exam.exam_title}}</h3>
                 </v-card-title>
@@ -67,7 +78,7 @@
                     </v-card>
                 </v-card-text>
 
-                <v-row justify="center">
+                <v-row justify="center" v-if="loading == false">
                     <v-btn
                         class="primary red accent-4"
                         dark

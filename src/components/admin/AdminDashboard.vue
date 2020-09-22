@@ -12,7 +12,7 @@
                         </div>
                     </v-list-item-content>
                 </v-list> 
-                <v-list-item link>
+                <!-- <v-list-item link>
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-home</v-icon>
                     </v-list-item-action>
@@ -27,7 +27,7 @@
                     <v-list-item-content>
                         Examinees
                     </v-list-item-content>
-                </v-list-item>
+                </v-list-item> -->
                   <v-list-item link v-on:click="adminExamination">
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-clipboard-text-multiple</v-icon>
