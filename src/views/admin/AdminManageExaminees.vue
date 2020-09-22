@@ -4,6 +4,17 @@
         <p class="ml-12">{{exam_title}}</p>
         <v-layout justify-center>
             <v-flex xs12 sm12 xl10 md10>
+                <div class="text-center mr-12">
+                    <v-progress-circular v-if="loading == true"
+                        :rotate="90"
+                        :size="100"
+                        :width="15"
+                        :value="value"
+                        color="red"
+                        >
+                        {{ value }}
+                    </v-progress-circular>
+                </div>
                 <div class="mt-6">
                     <v-alert v-model="success.show" transition="fade-transition" type="success">
                         {{success.message}}
@@ -12,6 +23,7 @@
                         {{error.message}}
                     </v-alert>
                     <v-data-table
+                        v-if="loading == false"
                         :headers="headers"
                         :items="exam_examinees"
                         class="elevation-1"
@@ -206,11 +218,18 @@ export default {
                 message: '',
                 user_id: '',
                 item: {}
-            }
+            },
+            loading:true,
+            interval: {},
+            value: 0,
         }
     },
     mounted() {
         this.getExamExaminees()
+        this.loadingButton()
+    },
+    beforeDestroy () {
+        clearInterval(this.interval)
     },
     methods:{
         getExamExaminees() {
@@ -220,6 +239,7 @@ export default {
             else {
                 axios.get(`/api/exam/examinees/${this.exam_id}`).then((response) => {
                     this.exam_examinees = response.data
+                    this.loading = false
                 }).catch((error) => {
                     console.log('Call the Administrator')
                 })
@@ -306,7 +326,15 @@ export default {
             this.addExamineeDialog.show = false
             this.addExamineeDialog.success.show = false
             this.addExamineeDialog.error.show = false
-        }
+        },
+        loadingButton(){
+            this.interval = setInterval(() => {
+                if (this.value === 100) {
+                    return (this.value = 0)
+                }
+                this.value += 10
+            }, 1000)
+        },
     }
 }
 </script>

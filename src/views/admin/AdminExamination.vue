@@ -10,53 +10,65 @@
                 <v-text-field prepend-inner-icon="mdi-magnify" rounded solo label="Search Exam"></v-text-field>
             </v-flex>
             <v-flex class="ml-12">
-                <v-btn color="#760D11" dark rounded v-on:click="createExamination"> <v-icon size="17" class="pr-1">mdi-plus-thick</v-icon> Create Exam </v-btn>    
+                <v-btn color="#760D11" class="mt-2" dark rounded v-on:click="createExamination"> <v-icon size="17" class="pr-1">mdi-plus-thick</v-icon> Create Exam </v-btn>    
             </v-flex>
         </v-layout>
         <v-layout row wrap class="mt-5">
             <v-flex xs12 sm12 md10 xl7>
+                <div class="text-center mr-12">
+                    <v-progress-circular v-if="loading == true"
+                        :rotate="90"
+                        :size="100"
+                        :width="15"
+                        :value="value"
+                        color="red"
+                        >
+                        {{ value }}
+                    </v-progress-circular>
+                </div>
 
                 <v-alert :value="typeof success !== 'undefined' && success != ''" transition="fade-transition" type="success">
                     {{success}}
                 </v-alert>
+                <div v-if="loading == false">
+                    <v-expansion-panels class="mt-3" accordion v-for="(exam, exam_no) in exams" :key="exam.exam_id">
+                        <v-expansion-panel>
+                            <v-expansion-panel-header>
+                                <h3 class="colored-title">{{exam.exam_title}}</h3>
+                                <span class="text-right"><b>Last update: </b>{{exam.updated_on_f}}</span>
+                            </v-expansion-panel-header>
+                            <v-expansion-panel-content>
 
-                <v-expansion-panels class="mt-3" accordion v-for="(exam, exam_no) in exams" :key="exam.exam_id">
-                    <v-expansion-panel>
-                        <v-expansion-panel-header>
-                            <h3 class="colored-title">{{exam.exam_title}}</h3>
-                            <span class="text-right"><b>Last update: </b>{{exam.updated_on_f}}</span>
-                        </v-expansion-panel-header>
-                        <v-expansion-panel-content>
+                                <p>{{exam.exam_desc}}</p>
+                                <p><b>Time Duration: </b>{{exam.time_duration}} mins</p>
+                                <p><b>Passing Score: </b>{{exam.passing_score}}/{{exam.total_score}}</p>
+                                <p><b>Number of questions: </b>{{exam.total_num_questions}}</p>
+                                <p v-if="exam.is_randomized == true"><b>Randomized</b></p>
 
-                            <p>{{exam.exam_desc}}</p>
-                            <p><b>Time Duration: </b>{{exam.time_duration}} mins</p>
-                            <p><b>Passing Score: </b>{{exam.passing_score}}/{{exam.total_score}}</p>
-                            <p><b>Number of questions: </b>{{exam.total_num_questions}}</p>
-                            <p v-if="exam.is_randomized == true"><b>Randomized</b></p>
+                                <v-container class="text-center">
+                                    <v-btn class="ma-2" outlined rounded color="teal darken-4" @click="viewExam(exam.exam_id)">
+                                        <v-icon left>mdi-eye</v-icon> View
+                                    </v-btn>
+                                    <v-btn class="ma-2" outlined rounded color="success" @click="editExamConfirm(exam.exam_id)">
+                                        <v-icon left>mdi-pencil</v-icon> Edit
+                                    </v-btn>
+                                    <v-btn class="ma-2" outlined rounded color="red" @click="deleteExamConfirm(exam.exam_id, exam_no)">
+                                        <v-icon left>mdi-delete</v-icon> Delete
+                                    </v-btn>
+                                    <v-divider></v-divider>
+                                    <v-btn class="ma-2" outlined rounded color="light-blue darken-3" @click="manageExaminees(exam.exam_id, exam.exam_title)">
+                                        <v-icon left>mdi-account-group</v-icon> Manage Examinees
+                                    </v-btn>
+                                    <v-btn class="ma-2" outlined rounded color="deep-orange darken-1" @click="viewResults(exam.exam_id, exam.exam_title)">
+                                        <v-icon left>mdi-folder-account</v-icon> View Results
+                                    </v-btn>
+                                </v-container>
 
-                            <v-container class="text-center">
-                                <v-btn class="ma-2" outlined rounded color="teal darken-4" @click="viewExam(exam.exam_id)">
-                                    <v-icon left>mdi-eye</v-icon> View
-                                </v-btn>
-                                <v-btn class="ma-2" outlined rounded color="success" @click="editExamConfirm(exam.exam_id)">
-                                    <v-icon left>mdi-pencil</v-icon> Edit
-                                </v-btn>
-                                <v-btn class="ma-2" outlined rounded color="red" @click="deleteExamConfirm(exam.exam_id, exam_no)">
-                                    <v-icon left>mdi-delete</v-icon> Delete
-                                </v-btn>
-                                <v-divider></v-divider>
-                                <v-btn class="ma-2" outlined rounded color="light-blue darken-3" @click="manageExaminees(exam.exam_id, exam.exam_title)">
-                                    <v-icon left>mdi-account-group</v-icon> Manage Examinees
-                                </v-btn>
-                                <v-btn class="ma-2" outlined rounded color="deep-orange darken-1" @click="viewResults(exam.exam_id, exam.exam_title)">
-                                    <v-icon left>mdi-folder-account</v-icon> View Results
-                                </v-btn>
-                            </v-container>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
 
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </v-expansion-panels>
-
+                </div>
             </v-flex>
 
             <v-container>
@@ -126,6 +138,9 @@ export default {
         return {
             exams: [],
             message: '',
+            loading:true,
+            interval: {},
+            value: 0,
             delExamDialog: {
                 show: false,
                 message: '',
@@ -141,6 +156,11 @@ export default {
     },
     mounted() {
         this.loadExams()
+        this.loadingButton()
+    },
+      // for loading button
+    beforeDestroy () {
+        clearInterval(this.interval)
     },
     methods:{
         createExamination(){
@@ -149,7 +169,7 @@ export default {
         loadExams() {
             axios.get('/api/exams').then((response) => {
                 this.exams = response.data
-                this.message = 'success'
+                this.loading = false
             }).catch((error) => {
                 this.message = 'error'
             })
@@ -230,7 +250,15 @@ export default {
                     'exam_id': exam_id
                 }
             })
-        }
+        },
+        loadingButton(){
+            this.interval = setInterval(() => {
+                if (this.value === 100) {
+                    return (this.value = 0)
+                }
+                this.value += 10
+            }, 1000)
+        },
     }
 }
 </script>

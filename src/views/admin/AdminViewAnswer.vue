@@ -1,7 +1,18 @@
 <template>
     <div class="pop mt-12 ml-12">
+          <div class="text-center mr-12">
+                <v-progress-circular v-if="loading == true"
+                    :rotate="90"
+                    :size="100"
+                    :width="15"
+                    :value="value"
+                    color="red"
+                    >
+                    {{ value }}
+                </v-progress-circular>
+            </div>
         <v-container>
-            <v-card class="mx-auto rounded-xl card-border" elevation="8 " max-width="800" outlined>
+            <v-card class="mx-auto rounded-xl card-border" v-if="loading == false" elevation="8 " max-width="800" outlined>
                 <v-card-title class="mt-5 pl-12">
                     <h3 class="pop exam-warning">Exam Result</h3>
                 </v-card-title>
@@ -66,7 +77,7 @@
                     </v-card>
                 </v-card-text>
 
-                <v-row justify="center">
+                <v-row justify="center" v-if="loading == false">
                     <v-btn
                         class="primary red accent-4"
                         dark
@@ -133,6 +144,7 @@ export default {
     },
     mounted() {
         this.loadData()
+        this.loadingButton()
     },
      // for loading button
     beforeDestroy () {
@@ -170,7 +182,15 @@ export default {
                     exam_title: this.exam_title
                 }
             })
-        }
+        },
+        loadingButton(){
+            this.interval = setInterval(() => {
+                if (this.value === 100) {
+                    return (this.value = 0)
+                }
+                this.value += 10
+            }, 1000)
+        },
     }
 }
 </script>

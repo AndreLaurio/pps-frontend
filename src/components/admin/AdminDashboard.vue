@@ -110,9 +110,6 @@ export default {
         accountApproval(){
             this.$router.push({ name: 'AdminAccountApproval' })
         },
-        adminExaminees(){
-            this.$router.push({ name: 'AdminExaminees' })
-        },
         adminExamination(){
             this.$router.push({ name: 'AdminExamination' })
         },

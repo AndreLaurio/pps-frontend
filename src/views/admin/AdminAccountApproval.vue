@@ -3,6 +3,17 @@
         <h2 class="mt-12 ml-12">Account Approval</h2>
         <v-layout justify-center>
             <v-flex xs12 sm12 xl10 md10>
+                <div class="text-center mr-12">
+                    <v-progress-circular v-if="loading == true"
+                        :rotate="90"
+                        :size="100"
+                        :width="15"
+                        :value="value"
+                        color="red"
+                        >
+                        {{ value }}
+                    </v-progress-circular>
+                </div>
                 <div class="mt-6">
                     <v-alert v-model="approvedSuccess" transition="fade-transition" type="success">
                         Approved Successfully!
@@ -11,6 +22,7 @@
                         Rejected Successfully!
                     </v-alert>
                     <v-data-table
+                        v-if="loading == false"
                         :headers="pendingAccountHeaders"
                         :items="pendingAccount"
                         class="elevation-1"
@@ -75,12 +87,19 @@ export default {
             ],
             userId:'',
             approvedSuccess: false,
-            rejectedSuccess: false
+            rejectedSuccess: false,
+            loading:true,
+            interval: {},
+            value: 0,
         }
     },
     mounted(){
         this.getAccounts()
         this.getUserData()
+        this.loadingButton()
+    },
+    beforeDestroy () {
+        clearInterval(this.interval)
     },
     methods:{
         getUserData(){
@@ -91,6 +110,7 @@ export default {
         getAccounts(){
             axios.get('/api/accounts').then(response =>{
                 this.pendingAccount = response.data
+                this.loading = false
                 // console.log(response.data)
             })
         },
@@ -121,6 +141,14 @@ export default {
             }).catch(error =>{
                 console.log('ERROR please call the administrator')
             })
+        },
+        loadingButton(){
+            this.interval = setInterval(() => {
+                if (this.value === 100) {
+                    return (this.value = 0)
+                }
+                this.value += 10
+            }, 1000)
         },
     }
 }

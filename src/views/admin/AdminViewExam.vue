@@ -36,7 +36,7 @@
                 <h2 class="pop exam-warning">{{exam.exam_title}}</h2>
 
                 <v-card-text class="pl-12 pr-12">
-                    <v-card elevation="15" v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4 rounded-xl">
+                    <v-card elevation="8" v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4 rounded-xl">
 
                         <div class="ml-5">
                             <v-row>
@@ -136,6 +136,7 @@ export default {
     },
     mounted() {
         this.loadData()
+        this.loadingButton()
     },
      // for loading button
     beforeDestroy () {
@@ -181,7 +182,15 @@ export default {
         },
         back() {
             this.$router.push({ name: 'AdminExamination' })
-        }
+        },
+        loadingButton(){
+            this.interval = setInterval(() => {
+                if (this.value === 100) {
+                    return (this.value = 0)
+                }
+                this.value += 10
+            }, 1000)
+        },
     }
 }
 </script>

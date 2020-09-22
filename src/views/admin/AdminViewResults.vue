@@ -4,9 +4,21 @@
         <p class="ml-12">{{exam_title}}</p>
         <v-layout justify-center>
             <v-flex xs12 sm12 xl10 md10>
+                <div class="text-center mr-12">
+                    <v-progress-circular v-if="loading == true"
+                        :rotate="90"
+                        :size="100"
+                        :width="15"
+                        :value="value"
+                        color="red"
+                        >
+                        {{ value }}
+                    </v-progress-circular>
+                </div>
                 <div class="mt-6">
                     
                     <v-data-table
+                        v-if="loading == false"
                         :headers="headers"
                         :items="examinees"
                         class="elevation-1"
@@ -79,6 +91,9 @@ export default {
     data() {
         return {
             examinees: [],
+            loading:true,
+            interval: {},
+            value: 0,
             headers:[
                 {text: 'Surname'},
                 {text: 'First Name'},
@@ -91,6 +106,10 @@ export default {
     },
     mounted() {
         this.getExamExaminees()
+        this.loadingButton()
+    },
+    beforeDestroy () {
+        clearInterval(this.interval)
     },
     methods:{
         getExamExaminees() {
@@ -101,7 +120,7 @@ export default {
                 axios.post('/api/exam/results', {
                     exam_id: this.exam_id
                 }).then((response) => {
-
+                    this.loading = false
                     this.examinees = response.data
 
                 }).catch((error) => {
@@ -118,7 +137,15 @@ export default {
                     user_id: user_id
                 }
             })
-        }
+        },
+        loadingButton(){
+            this.interval = setInterval(() => {
+                if (this.value === 100) {
+                    return (this.value = 0)
+                }
+                this.value += 10
+            }, 1000)
+        },
     }
 }
 </script>
