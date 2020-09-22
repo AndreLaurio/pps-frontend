@@ -30,9 +30,16 @@
                 <v-alert :value="typeof success !== 'undefined' && success != ''" transition="fade-transition" type="success">
                     {{success}}
                 </v-alert>
+                <div class="pages" v-if="loading == false">
+                    <ul>
+                        <li><v-btn small @click.prevent="loadExams(pagination.prev_page_url)"><v-icon>mdi-menu-left</v-icon></v-btn></li>
+                        <li class="ml-2 mr-2"><a class="page-link text-dark" href="#">{{ pagination.current_page }} of {{ pagination.last_page }}</a></li>
+                        <li><v-btn small @click.prevent="loadExams(pagination.next_page_url)"><v-icon>mdi-menu-right</v-icon></v-btn></li>
+                    </ul>
+                </div>
                 <div v-if="loading == false">
-                    <v-expansion-panels class="mt-3" accordion v-for="(exam, exam_no) in exams" :key="exam.exam_id">
-                        <v-expansion-panel>
+                    <v-expansion-panels accordion v-for="(exam, exam_no) in exams" :key="exam.exam_id">
+                        <v-expansion-panel class="mt-3">
                             <v-expansion-panel-header>
                                 <h3 class="colored-title">{{exam.exam_title}}</h3>
                                 <span class="text-right"><b>Last update: </b>{{exam.updated_on_f}}</span>
@@ -115,6 +122,18 @@
 .colored-title {
     color: #760D11;
 }
+.pages li{
+    float: left;
+}
+.pages ul{
+    list-style-type: none;
+}
+.pages a{
+    text-decoration: none;
+    color: black;
+    display: block;
+}
+
 </style>
 
 <script>
@@ -141,6 +160,7 @@ export default {
             loading:true,
             interval: {},
             value: 0,
+            pagination:{},
             delExamDialog: {
                 show: false,
                 message: '',
@@ -166,13 +186,24 @@ export default {
         createExamination(){
             this.$router.push({ name: 'AdminCreateExamination' })
         },
-        loadExams() {
-            axios.get('/api/exams').then((response) => {
-                this.exams = response.data
+        loadExams(page_url) {
+            page_url = page_url || '/api/exams'
+            axios.get(page_url).then((response) => {
+                this.exams = response.data.data
+                this.makePagination(response.data)
                 this.loading = false
             }).catch((error) => {
                 this.message = 'error'
             })
+        },
+        makePagination(response){
+            let pagination = {
+                current_page: response.current_page,
+                last_page: response.last_page,
+                prev_page_url: response.prev_page_url,
+                next_page_url: response.next_page_url
+            }
+            this.pagination = pagination
         },
         manageExaminees(exam_id, exam_title) {
             this.$router.push({ 
