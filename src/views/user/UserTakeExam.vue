@@ -45,13 +45,7 @@
                     >
                     {{timer.time}}
                 </v-banner>
-                <div class="pages">
-                    <ul>
-                        <li><v-btn small @click.prevent="takeExam(pagination.prev_page_url)"><v-icon>mdi-menu-left</v-icon></v-btn></li>
-                        <li class="ml-2 mr-2"><a class="page-link text-dark" href="#">{{ pagination.current_page }} of {{ pagination.last_page }}</a></li>
-                        <li><v-btn small @click.prevent="takeExam(pagination.next_page_url)"><v-icon>mdi-menu-right</v-icon></v-btn></li>
-                    </ul>
-                </div>
+
                 <v-card-text class="pl-12 pr-12">
                     <v-card elevation="15" v-for="(item, item_no) in exam.exam_items" :key="item.item_no" class="pa-4 mb-4 rounded-xl">
 
@@ -169,18 +163,6 @@
 .card-border{
     border: 4px solid #760D11;
 }
-.pages li{
-    float: left;
-}
-.pages ul{
-    list-style-type: none;
-}
-.pages a{
-    text-decoration: none;
-    color: black;
-    display: block;
-}
-
 </style>
 
 <script>
@@ -206,7 +188,7 @@ export default {
             loadingSubmit:false,
             interval: {},
             value: 0,
-            pagination:{},
+            
             loadingPrint: false,
             has_result: false,
             result: {},
@@ -283,56 +265,41 @@ export default {
                 this.loading = false
             })
         },
-        takeExam(page_url) {
-            //nakita mo error? baka kasi amy na typo lang ako dito
+        takeExam() {
             this.loadingTake = true
-            let main_url = '/api/exam/items/4'
-            // let main_url = `/api/exam/items/${this.exam.exam_id}`
-            page_url = page_url || main_url
-            console.log(main_url)
-            // console.log(page_url)
-            axios.get(page_url).then((response) => {
-                this.exam.exam_items = response.data.exam_items.data
+
+            axios.get(`/api/exam/items/${this.exam.exam_id}`).then((response) => {
+
+                this.exam.exam_items = response.data.exam_items
                 this.exam.exam_groups = response.data.exam_groups 
-                this.makePagination(response.data.exam_items)
-                console.log(response.data.exam_items)
                 this.is_taking_exam = true
 
-                // axios.post('/api/exam/take/session/set', {
-                //     'user_id': this.user_id,
-                //     'exam': this.exam
+                axios.post('/api/exam/take/session/set', {
+                    'user_id': this.user_id,
+                    'exam': this.exam
 
-                // }).then((response) => {
-                //     this.timer.time_duration = response.data.time_duration
-                //     this.timer.time_start = moment(response.data.time_start, 'YYYY-MM-DD hh:mm:ss')
+                }).then((response) => {
+
+                    this.timer.time_duration = response.data.time_duration
+                    this.timer.time_start = moment(response.data.time_start, 'YYYY-MM-DD hh:mm:ss')
                     
-                //     if (response.data.exam_status_code == 'O') {
-                //         this.exam = response.data.exam
-                //     }
+                    if (response.data.exam_status_code == 'O') {
+                        this.exam = response.data.exam
+                    }
 
-                //     this.runTimer()
+                    this.runTimer()
 
-                //     this.timer.t = setInterval(() => {
-                //                         this.runTimer()
-                //                     }, 1000)
+                    this.timer.t = setInterval(() => {
+                                        this.runTimer()
+                                    }, 1000)
 
-                // }).catch((error) => {
-                //     console.log('error sa timer')
-                // })
+                }).catch((error) => {
+                    console.log('Call the Administrator')
+                })
 
             }).catch((error) => {
-                console.log(error)
+                console.log('Call the Administrator')
             })
-        },
-        makePagination(response){
-            let pagination = {
-                current_page: response.current_page,
-                last_page: response.last_page,
-                prev_page_url: response.prev_page_url,
-                next_page_url: response.next_page_url
-            }
-            console.log(pagination)
-            this.pagination = pagination
         },
         toLetter(index) {
             return String.fromCharCode(index + 'A'.charCodeAt(0))
@@ -421,20 +388,20 @@ export default {
         }, 
         saveExamAnswer() {
 
-            // axios.post('/api/exam/take/save_point', {
-            //     user_id: this.user_id,
-            //     exam_id: this.exam.exam_id,
-            //     exam: this.exam
-            // }).then((response) => {
+            axios.post('/api/exam/take/save_point', {
+                user_id: this.user_id,
+                exam_id: this.exam.exam_id,
+                exam: this.exam
+            }).then((response) => {
                 
-            //     if (response.data.time == '00:00:00') {
-            //         this.timer.time = response.data.time
-            //         this.timer.stop = true
-            //     }
+                if (response.data.time == '00:00:00') {
+                    this.timer.time = response.data.time
+                    this.timer.stop = true
+                }
 
-            // }).catch((error) => {
-            //     console.log(error.response.data)
-            // })
+            }).catch((error) => {
+                console.log('Please contact the Administrator.')
+            })
         },
 
         hhmmss(s) {
