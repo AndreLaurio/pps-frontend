@@ -3,16 +3,15 @@
         <h2 class="mb-12">Profile</h2>
         <v-layout justify-center>
             <v-flex xs12 sm12 md3 xl3>
-                <v-card flat tile class="d-flex">
-                    <v-img
+                    <v-avatar size="180px"> 
+                        <v-img
                         :src="photo.src"
                         aspect-ratio="1"
-                        class="grey lighten-2"
-                    >
-                    </v-img>
-              </v-card>
-
-                <input type="file" @change="previewImage" :model="photo.img" label="File input"  prepend-icon="mdi-camera" outlined dense></v-file-input>
+                        class="grey lighten-2"         
+                        >
+                        </v-img>
+                    </v-avatar>
+                <input class="mt-5" type="file" @change="previewImage" :model="photo.img" label="File input"  prepend-icon="mdi-camera" outlined dense></v-file-input>
                 <p>{{photo.message}}</p>
                 <v-btn class="primary red accent-4 mr-5 mb-5" v-on:click="changePhoto">Change Photo</v-btn>
             </v-flex>
@@ -218,7 +217,7 @@ export default {
             ).then((response) => {
                 this.photo.message = 'The photo changed successfully.'
             }).catch((error) => {
-                console.log('Please contat the Administrator.')
+                console.log(error.response.data)
             })
         },
         previewImage(e) {

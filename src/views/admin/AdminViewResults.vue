@@ -123,7 +123,7 @@ export default {
                     this.loading = false
                     this.examinees = response.data
 
-                }).catch((error) => {
+                // }).catch((error) => {
                     console.log('Please call the Administrator.')
                 })
             }

@@ -13,9 +13,10 @@
             </div>
         <v-layout v-if="result.show == false">
             <v-flex>
-                <v-row>
-                    <div>
-                        {{isEmpty}}
+                <v-row class="justify-center">
+                    <div v-if="isEmpty == true">
+                        <br>
+                        <img class="ml-12" src="../../assets/error_asset.png" width="400" height="300">
                     </div>
                     <v-card  v-for="exam in exams" :key="exam.exam_id" width="300" height="400px" class="ml-5 mt-5 d-flex flex-column">
                         <v-card-title class="colored-title">
@@ -104,7 +105,7 @@ export default {
             exams: [],
             message: 'sample',
             loading:true,
-            isEmpty:'',
+            isEmpty:false,
             interval: {},
             value: 0,
             dialog: {
@@ -144,8 +145,9 @@ export default {
                 // this.exams = response.data
                 let a = response.data
                 if(a == ''){
-                    this.isEmpty = 'Walang exam'
+                    this.isEmpty = true
                 }else{
+                    this.isEmpty = false
                     this.exams = response.data
                 }
                 this.loading = false

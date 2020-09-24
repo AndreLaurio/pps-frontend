@@ -3,9 +3,14 @@
         <v-navigation-drawer v-model="drawer" app color="grey lighten-5">
             <v-list dense>
                 <v-list>
+                    <div class="text-center">
+                        <v-avatar color="#760D11" size="50" v-if="isWithPP == false">
+                             <v-icon dark>mdi-account-circle</v-icon>
+                        </v-avatar>
+                     </div>
                     <v-list-item-content>
-                        <v-avatar>
-                            <img src="https://cdn.vuetifyjs.com/images/john.jpg" width="100px" height="100px">
+                        <v-avatar v-if="isWithPP == true"> 
+                            <img :src="require(`../../assets/storage/images/profiles/${userData.profile_pic}`)" width="100px" height="100px">
                         </v-avatar>
                         <div>
                             <h4 class="text-center mt-3">{{userData.first_name}} {{userData.last_name}}</h4>
@@ -73,9 +78,11 @@ export default {
         return{
             userData:{
                 first_name:'',
-                last_name:''
+                last_name:'',
+                profile_pic:''
             },
             drawer: true,
+            isWithPP:false
         }
     },
     mounted(){
@@ -86,6 +93,10 @@ export default {
             axios.get('/api/user').then(response =>{
                 this.userData.first_name = response.data.first_name,
                 this.userData.last_name = response.data.last_name
+                if(response.data.photo_src != null){
+                    this.userData.profile_pic = response.data.photo_src
+                    this.isWithPP = true
+                }
             })
         },
         logout(){

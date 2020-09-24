@@ -3,10 +3,12 @@
         <v-navigation-drawer v-model="drawer" app color="grey lighten-5">
             <v-list dense>
                  <v-list>
-                    <v-list-item-content color="#760D11">
-                        <v-avatar>
-                            <img src="https://cdn.vuetifyjs.com/images/john.jpg" width="100px" height="100px">
+                     <div class="text-center">
+                        <v-avatar color="#760D11" size="50">
+                            <span class="white--text headline">A</span>
                         </v-avatar>
+                     </div>
+                    <v-list-item-content color="#760D11">
                         <div>
                             <h4 class="text-center mt-3">{{userData.first_name}} {{userData.last_name}}</h4>
                         </div>

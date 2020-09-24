@@ -1,10 +1,8 @@
 <template>
     <v-container class="pop">
-        <h3 class="text-center mt-5">Admin</h3>
-        <v-img src="../../assets/pps-logo.png" class="mx-auto mt-5" width="150"></v-img>
         <v-layout justify-center>            
             <v-flex xs12 md6>
-                 <v-card class="mx-auto rounded-xl mt-3 mb-3" color="#760D11" max-width="500">
+                 <v-card class="mx-auto rounded-xl mt-3 mb-3" color="#ffffff" max-width="500">
                      <v-card-title class="justify-center pt-6">
                             <h2 class="white--text">Welcome</h2> 
                         </v-card-title>

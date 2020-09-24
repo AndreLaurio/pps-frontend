@@ -63,7 +63,7 @@
                     <div class="mt-5">
                         <p> <span class="ml-5">Please wait for the approval of your request.</span>
                         It might take <br> 1-2 days to verify your account. <br> <br>
-                        This is to guarantee that all sellers are credible.
+                        This is to guarantee that all users are verified first.
                         </p>
                     </div>
                     <div class="mt-5">
