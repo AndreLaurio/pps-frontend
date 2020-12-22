@@ -278,8 +278,9 @@ export default {
     UserDashboard,
   },
   mounted() {
-    this.loadData();
-    this.loadingButton();
+    this.loadData()
+    this.loadingButton()
+    this.changetab()
   },
   // for loading button
   beforeDestroy() {
