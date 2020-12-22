@@ -224,7 +224,7 @@
   color: red;
 }
 .colored-title {
-  color: #760d11;
+  color: black;
 }
 </style>
 
