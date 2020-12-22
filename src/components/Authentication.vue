@@ -302,6 +302,49 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- reset pw alerts -->
+    <v-dialog v-model="sentSuccessful" persistent max-width="550">
+      <v-card class="font-body rounded-lg">
+        <v-card-title class="pl-8 pr-8 pt-8 justify-center">
+          Sent Successfully
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <div class="mb-2">
+            <v-btn
+              color="indigo"
+              outlined
+              @click="sentSuccessFunc"
+              class="text-uppercase rounded-lg"
+            >
+              Ok
+            </v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="sentFailed" persistent max-width="550">
+      <v-card class="font-body rounded-lg">
+        <v-card-title class="pl-8 pr-8 pt-8 justify-center">
+          Sent failed please contact the administrator!
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <div class="mb-2">
+            <v-btn
+              color="indigo"
+              outlined
+              @click="sentFailedFunc"
+              class="text-uppercase rounded-lg"
+            >
+              Ok
+            </v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -377,6 +420,8 @@ export default {
       registerSuccessful: false,
       waitingError: "",
       registerFailed: false,
+      sentFailed: false,
+      sentSuccessful: false,
       validationError: [],
     };
   },
@@ -452,10 +497,10 @@ export default {
           email: this.forgotPw_data.email,
         })
         .then((response) => {
-          console.log("sent successfully");
+          this.sentSuccessful = true;
         })
         .catch((error) => {
-          console.log("sending failed");
+          this.sentFailed = true;
         });
     },
     registerSuccess() {
@@ -467,6 +512,14 @@ export default {
       this.registerFailed = false;
       this.registerDialog = false;
       window.location.reload();
+    },
+    sentFailedFunc() {
+      this.sentFailed = false;
+      this.sentSuccessful = false;
+    },
+    sentSuccessFunc() {
+      this.sentSuccessful = false;
+      this.sentFailed = false;
     },
     changetab() {
       document.addEventListener("visibilitychange", function() {
