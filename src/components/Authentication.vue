@@ -223,7 +223,7 @@
               </ul>
             </div>
             <div>
-              {{ waitingError }}
+              <span class="red--text">{{ waitingError }}</span>
             </div>
             <v-btn
               depressed
