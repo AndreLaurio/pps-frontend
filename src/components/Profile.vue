@@ -83,6 +83,8 @@
                   solo
                   dense
                   :items="sex"
+                  item-value="value"
+                  item-text="text"
                   v-model="user_details.sex"
                 ></v-select>
               </v-flex>
@@ -111,6 +113,7 @@
                   :rules="emailRules"
                   :counter="30"
                   required
+                  v-bind:readonly="true"
                 ></v-text-field>
               </v-flex>
               <v-flex>
@@ -178,7 +181,10 @@ axios.defaults.baseURL = "http://localhost:8000";
 export default {
   data() {
     return {
-      sex: ["Female", "Male"],
+      sex: [
+        {value: 'F', text: 'Female'},
+        {value: 'M', text: 'Male'}
+      ],
       user_id: "",
       user_email: "",
       user_password: "",
@@ -227,6 +233,13 @@ export default {
       axios.get("/api/user").then((response) => {
         this.user_id = response.data.user_id;
         this.user_email = response.data.email;
+        this.user_password.email = response.data.email;
+        this.user_details.first_name = response.data.first_name;
+        this.user_details.last_name = response.data.last_name;
+        this.user_details.middle_name = response.data.middle_name;
+        this.user_details.extension_name = response.data.extension_name;
+        this.user_details.sex = response.data.gender;
+        this.user_details.birth_date = response.data.birth_date;
       });
     },
     changeDetails() {

@@ -8,7 +8,7 @@
         <v-dialog v-model="registerDialog" persistent max-width="550">
           <template v-slot:activator="{ on, attrs }">
             <span class="indigo--text" v-bind="attrs" v-on="on"
-              >create your own account</span
+              > create your own account</span
             >
           </template>
           <v-card class="register-card font-body rounded-lg">
