@@ -206,6 +206,21 @@ export default {
         },
         addExamination() {
             this.loadingAddEx = true
+
+            //random code generator
+            var result = "";
+            var length = 6;
+            var characters =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(
+                    Math.floor(Math.random() * charactersLength)
+                );
+            }
+
+            this.exam.exam_code = result;
+
             axios.post('/api/exam/create', this.exam).then((response) => {
                 this.loadingAddEx = false
                 this.$router.push({ 
