@@ -497,10 +497,10 @@ export default {
           email: this.forgotPw_data.email,
         })
         .then((response) => {
-          console.log("sent successfully");
+          this.sentSuccessful = true;
         })
         .catch((error) => {
-          console.log("sending failed");
+          this.sentFailed = true;
         });
     },
     registerSuccess() {
@@ -517,7 +517,7 @@ export default {
       this.sentFailed = false;
       this.sentSuccessful = false;
     },
-    sentSuccessfulFunc() {
+    sentSuccessFunc() {
       this.sentSuccessful = false;
       this.sentFailed = false;
     },
