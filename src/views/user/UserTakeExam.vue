@@ -236,21 +236,6 @@ import moment from "moment";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
 
-<<<<<<< Updated upstream
-                timerDialogShow: false,
-                sticky: true
-            },
-            sampvar: 10
-        }
-    },
-    components:{
-        UserDashboard
-    },
-    mounted() {
-        this.loadData()
-        this.loadingButton()
-        this.changetab()
-=======
 export default {
   data() {
     return {
@@ -334,7 +319,6 @@ export default {
         .catch((error) => {
           console.log("Call the Administrator.");
         });
->>>>>>> Stashed changes
     },
     getExamDesc(exam_id) {
       axios
@@ -463,38 +447,9 @@ export default {
           this.timer.is_starting_point = false;
         }
 
-<<<<<<< Updated upstream
-            var m = Math.floor(s / 60)
-            s = s % 60
-            var h = Math.floor(m / 60)
-            m = m % 60
-            return `${this.pad(h)}:${this.pad(m)}:${this.pad(s)}`
-        },
-        pad(n) {
-            return ("0" + n).slice(-2);
-        },
-        changetab() {
-            var self = this;
-            document.addEventListener("visibilitychange", function() {
-                if (document.hidden) {
-
-                    axios.post('/api/exam/take/change-tab', {
-                        user_id: self.user_id,
-                        exam_id: self.exam.exam_id
-                    }).then((response) => {
-                        
-                        console.log('change tab');
-
-                    }).catch((error) => {
-                        console.log('Please contact the Administrator.')
-                    })
-                }
-            });
-=======
         if (++this.timer.save_point_counter > this.timer.save_point) {
           this.saveExamAnswer();
           this.timer.save_point_counter = 0;
->>>>>>> Stashed changes
         }
       }
     },
@@ -526,6 +481,24 @@ export default {
     pad(n) {
       return ("0" + n).slice(-2);
     },
-  },
+    changetab() {
+        var self = this;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+
+                axios.post('/api/exam/take/change-tab', {
+                    user_id: self.user_id,
+                    exam_id: self.exam.exam_id
+                }).then((response) => {
+                    
+                    console.log('change tab');
+
+                }).catch((error) => {
+                    console.log('Please contact the Administrator.')
+                })
+            }
+        });
+    }
+  }
 };
 </script>
