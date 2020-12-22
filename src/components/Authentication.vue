@@ -399,7 +399,7 @@ export default {
                 let is_approved = response.data.is_approved;
                 var userType = response.data.user_type_id;
                 console.log(is_approved);
-                if (userType == 1) {
+                if (userType == 2) {
                   if (is_approved == 1) {
                     this.$router.push({
                       name: "UserExamination",
@@ -408,7 +408,7 @@ export default {
                     this.loginLoading = false;
                     this.waitingError = "Waiting for Approval";
                   }
-                } else if (userType == 2) {
+                } else if (userType == 1) {
                   this.$router.push({
                     name: "Admin",
                   });
@@ -436,7 +436,7 @@ export default {
           email: this.register_data.email,
           password: this.register_data.password,
           password_confirmation: this.register_data.confirm_password,
-          user_type_id: 1,
+          user_type_id: 2,
         })
         .then((response) => {
           this.registerSuccessful = true;

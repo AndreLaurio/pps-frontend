@@ -150,6 +150,9 @@ export default {
                     this.isEmpty = false
                     this.exams = response.data
                 }
+
+                console.log('test');
+                console.log(this.exams);
                 this.loading = false
             }).catch((error) => {
                 console.log('Please call the adminsitrator')
