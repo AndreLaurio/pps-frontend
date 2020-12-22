@@ -18,7 +18,11 @@
           dense
         />
         <p>{{ photo.message }}</p>
-        <v-btn class="primary red accent-4 mr-5 mb-5" v-on:click="changePhoto"
+        <v-btn
+          outlined
+          dark
+          class="primary rounded-lg mr-5 mb-5"
+          v-on:click="changePhoto"
           >Change Photo</v-btn
         >
       </v-flex>
@@ -91,7 +95,9 @@
             </v-layout>
             <div>
               <v-btn
-                class="primary red accent-4 mr-5 mb-5"
+                dark
+                outlined
+                class="primary rounded-lg mr-5 mb-5"
                 v-on:click="changeDetails"
                 >Change Details</v-btn
               >
@@ -150,7 +156,9 @@
               </v-flex>
               <v-flex>
                 <v-btn
-                  class="primary mt-6 red accent-4"
+                  outlined
+                  dark
+                  class="primary mt-6"
                   v-on:click="changePassword"
                   >Change Password</v-btn
                 >
@@ -182,8 +190,8 @@ export default {
   data() {
     return {
       sex: [
-        {value: 'F', text: 'Female'},
-        {value: 'M', text: 'Male'}
+        { value: "F", text: "Female" },
+        { value: "M", text: "Male" },
       ],
       user_id: "",
       user_email: "",

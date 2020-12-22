@@ -7,8 +7,8 @@
         <span class="grey--text text--darken-1">Or</span>
         <v-dialog v-model="registerDialog" persistent max-width="550">
           <template v-slot:activator="{ on, attrs }">
-            <span class="indigo--text" v-bind="attrs" v-on="on"
-              > create your own account</span
+            <span class="indigo--text" v-bind="attrs" v-on="on">
+              create your own account</span
             >
           </template>
           <v-card class="register-card font-body rounded-lg">
@@ -410,16 +410,16 @@ export default {
                   }
                 } else if (userType == 1) {
                   this.$router.push({
-                    name: "Admin",
+                    name: "AdminExamination",
                   });
                 }
               });
             })
             .catch((error) => {
-              //   let validationErrors = Object.values(error.response.data.errors);
-              //   validationErrors = validationErrors.flat();
-              //   this.validationError = validationErrors;
-              //   this.loginLoading = false;
+              let validationErrors = Object.values(error.response.data.errors);
+              validationErrors = validationErrors.flat();
+              this.validationError = validationErrors;
+              this.loginLoading = false;
               console.log(error);
             });
         })
@@ -440,6 +440,7 @@ export default {
         })
         .then((response) => {
           this.registerSuccessful = true;
+          axios.post("/logout").then((response) => {});
         })
         .catch((error) => {
           this.registerFailed = true;

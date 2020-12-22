@@ -1,10 +1,10 @@
 <template>
   <nav class="pop">
-    <v-navigation-drawer v-model="drawer" app color="grey lighten-5">
+    <v-navigation-drawer v-model="drawer" app color="#292935">
       <v-list dense>
         <v-list>
           <div class="text-center">
-            <v-avatar color="#760D11" size="50" v-if="isWithPP == false">
+            <v-avatar color="indigo" size="50" v-if="isWithPP == false">
               <v-icon dark>mdi-account-circle</v-icon>
             </v-avatar>
           </div>
@@ -19,55 +19,46 @@
               />
             </v-avatar>
             <div>
-              <h4 class="text-center mt-3">
+              <h4 class="white--text text-center mt-3">
                 {{ userData.first_name }} {{ userData.last_name }}
               </h4>
             </div>
           </v-list-item-content>
         </v-list>
-        <!-- <v-list-item link>
-                    <v-list-item-action>
-                        <v-icon color="#760D11">mdi-home</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        Home
-                    </v-list-item-content>
-                </v-list-item> -->
         <v-list-item link v-on:click="userProfile">
           <v-list-item-action>
-            <v-icon color="#760D11">mdi-face</v-icon>
+            <v-icon color="white">mdi-face</v-icon>
           </v-list-item-action>
-          <v-list-item-content>
+          <v-list-item-content class="white--text">
             Profile
           </v-list-item-content>
         </v-list-item>
         <v-list-item link v-on:click="userExamination">
           <v-list-item-action>
-            <v-icon color="#760D11">mdi-clipboard-text-multiple</v-icon>
+            <v-icon color="white">mdi-clipboard-text-multiple</v-icon>
           </v-list-item-action>
-          <v-list-item-content>
+          <v-list-item-content class="white--text">
             Examination
           </v-list-item-content>
         </v-list-item>
         <v-list-item link v-on:click="logout">
           <v-list-item-action>
-            <v-icon color="#760D11">mdi-logout</v-icon>
+            <v-icon color="white">mdi-logout</v-icon>
           </v-list-item-action>
-          <v-list-item-content>
+          <v-list-item-content class="white--text">
             Logout
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2 text-center mb-5">
+          <img src="../../assets/vixam_logo.png" />
+        </div>
+      </template>
     </v-navigation-drawer>
 
-    <v-app-bar app color="white" dark>
+    <v-app-bar app color="indigo" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <img
-        src="../../assets/vixam_logo.png"
-        class="mr-5"
-        width="40px"
-        height="40px"
-      />
       <v-toolbar-title>Vixam</v-toolbar-title>
     </v-app-bar>
   </nav>
