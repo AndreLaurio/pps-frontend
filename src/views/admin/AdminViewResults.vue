@@ -182,7 +182,7 @@ export default {
           .then((response) => {
             this.loading = false;
             this.examinees = response.data;
-
+            console.log(this.examinees);
             // }).catch((error) => {
             console.log("Please call the Administrator.");
           });
