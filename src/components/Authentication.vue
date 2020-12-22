@@ -222,6 +222,9 @@
                 </li>
               </ul>
             </div>
+            <div>
+              {{ waitingError }}
+            </div>
             <v-btn
               depressed
               color="primary"
@@ -372,6 +375,7 @@ export default {
       registerDialog: false,
       forgotPwDialog: false,
       registerSuccessful: false,
+      waitingError: "",
       registerFailed: false,
       validationError: [],
     };
@@ -391,14 +395,10 @@ export default {
               password: this.login_data.password,
             })
             .then((response) => {
-              var token = document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content");
-              localStorage.setItem("token", token);
-
               axios.get("api/user").then((response) => {
                 let is_approved = response.data.is_approved;
                 var userType = response.data.user_type_id;
+                console.log(is_approved);
                 if (userType == 1) {
                   if (is_approved == 1) {
                     this.$router.push({
@@ -406,7 +406,7 @@ export default {
                     });
                   } else {
                     this.loginLoading = false;
-                    this.validationError = "Waiting for Approval";
+                    this.waitingError = "Waiting for Approval";
                   }
                 } else if (userType == 2) {
                   this.$router.push({
@@ -416,11 +416,11 @@ export default {
               });
             })
             .catch((error) => {
-              let validationErrors = Object.values(error.response.data.errors);
-              validationErrors = validationErrors.flat();
-              this.validationError = validationErrors;
-              this.loginLoading = false;
-              //   console.log(error);
+              //   let validationErrors = Object.values(error.response.data.errors);
+              //   validationErrors = validationErrors.flat();
+              //   this.validationError = validationErrors;
+              //   this.loginLoading = false;
+              console.log(error);
             });
         })
         .catch((error) => {
