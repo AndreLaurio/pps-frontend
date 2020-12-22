@@ -45,9 +45,52 @@
                                     <span v-if="examinee.item.exam_status_code == 'N'">NO ANSWER</span>
                                     <v-btn v-if="examinee.item.exam_status_code != 'N'" class="mx-2 primary" small @click="viewAnswer(examinee.item.user_id)"><v-icon>mdi-eye</v-icon> View Answer</v-btn>
                                 </td>
+                                <td class="text-center">
+                                    <v-btn v-if="examinee.item.exam_status_code != 'N'" class="mx-2 default" small @click="viewChangeTabHistory(examinee.item.user_id, examinee.item.exam_id)"><v-icon>mdi-eye</v-icon> Count: {{examinee.item.change_tab_count}}</v-btn>
+                                </td>
                             </tr>
                         </template>
                     </v-data-table>
+
+                    <v-dialog v-model="changeTabHistoryDialog" persistent max-width="550">
+                        <v-card class="font-body">
+                            <v-card-title class="pl-8 pr-8 pt-8 justify-center">
+                                <span class="text-center text-uppercase register-title"
+                                    >Change Tab Hisory</span
+                                >
+                            </v-card-title>
+                            <v-card-text>
+                                
+                                <v-data-table
+                                    :headers="changeTabHistoryHeaders"
+                                    :items="changeTabs"
+                                    class="elevation-1"
+                                >
+                                    <template v-slot:item="changeTab">
+                                        <tr>
+                                            <td>
+                                                <center>{{changeTab.item.change_tab_date}}</center>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </v-data-table>
+                                
+
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                               
+                                <v-btn
+                                    color="red darken-1"
+                                    text
+                                    @click="changeTabHistoryDialog = false"
+                                    class="text-uppercase"
+                                >
+                                    Close
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                 </div>
             </v-flex>
         </v-layout>
@@ -100,8 +143,14 @@ export default {
                 {text: 'Email', align:'center'},
                 {text: 'Score', align:'center'},
                 {text: 'Remarks', align:'center'},
-                {text: 'Actions', align: 'center'}
-            ]
+                {text: 'Actions', align: 'center'},
+                {text: 'Change Tab', align: 'center'}
+            ],
+            changeTabHistoryDialog: false,
+            changeTabs: [],
+            changeTabHistoryHeaders:[
+                {text: 'Date', align:'center'}
+            ],
         }
     },
     mounted() {
@@ -146,6 +195,22 @@ export default {
                 this.value += 10
             }, 1000)
         },
+        viewChangeTabHistory(user_id, exam_id) {
+            console.log('clicked');
+            axios.post('/api/exam/examinee/change-tab-history/get', {
+                user_id: user_id,
+                exam_id: exam_id
+            }).then((response) => {
+                
+                this.changeTabs = response.data;
+                this.changeTabHistoryDialog = true;
+                console.log('succ');
+
+            }).catch((error) => {
+                console.log('Please contact the Administrator.');
+                console.log('faliled');
+            })
+        }
     }
 }
 </script>

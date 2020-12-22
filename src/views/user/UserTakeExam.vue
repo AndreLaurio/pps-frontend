@@ -208,7 +208,8 @@ export default {
 
                 timerDialogShow: false,
                 sticky: true
-            }
+            },
+            sampvar: 10
         }
     },
     components:{
@@ -217,6 +218,7 @@ export default {
     mounted() {
         this.loadData()
         this.loadingButton()
+        this.changetab()
     },
      // for loading button
     beforeDestroy () {
@@ -414,6 +416,24 @@ export default {
         },
         pad(n) {
             return ("0" + n).slice(-2);
+        },
+        changetab() {
+            var self = this;
+            document.addEventListener("visibilitychange", function() {
+                if (document.hidden) {
+
+                    axios.post('/api/exam/take/change-tab', {
+                        user_id: self.user_id,
+                        exam_id: self.exam.exam_id
+                    }).then((response) => {
+                        
+                        console.log('change tab');
+
+                    }).catch((error) => {
+                        console.log('Please contact the Administrator.')
+                    })
+                }
+            });
         }
 
     }
