@@ -98,6 +98,19 @@
               />
             </div>
 
+            <div v-if="item.question_type_code == 'TOF'" class="ml-10">
+              <v-radio-group v-model="item.answer" :mandatory="false">
+                <v-radio
+                  color="red darken-3"
+                  v-for="choice in tofChoices"
+                  :key="choice.value"
+                  :value="choice.value"
+                  :label="choice.text"
+                  readonly
+                ></v-radio>
+              </v-radio-group>
+            </div>
+
             <div>
               <p class="exam-warning ml-10 mt-2" :id="`m-${item_no}`">
                 {{ exam.exam_items[item_no].message }}
@@ -148,6 +161,10 @@ export default {
       loading: true,
       interval: {},
       value: 0,
+      tofChoices: [
+        {value: true, text: 'TRUE'},
+        {value: false, text: 'FALSE'}
+      ]
     };
   },
   props: {
@@ -162,7 +179,7 @@ export default {
     user_id: {
       type: Number,
       default: 0,
-    },
+    }
   },
   components: {
     AdminDashboard,

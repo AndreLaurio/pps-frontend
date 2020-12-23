@@ -114,14 +114,16 @@
               </div>
             </div>
 
-            <div v-if="item.question_type_code == 'FTQ'" class="ml-10">
-              <v-textarea
-                v-model="item.answer"
-                :counter="200"
-                outlined
-                placeholder="Please write your answer."
-                :rows="3"
-              />
+            <div v-if="item.question_type_code == 'TOF'" class="ml-10">
+              <v-radio-group v-model="item.answer" :mandatory="false">
+                <v-radio
+                  color="red darken-3"
+                  v-for="choice in tofChoices"
+                  :key="choice.value"
+                  :value="choice.value"
+                  :label="choice.text"
+                ></v-radio>
+              </v-radio-group>
             </div>
 
             <div>
@@ -270,8 +272,12 @@ export default {
         is_starting_point: true,
 
         timerDialogShow: false,
-        sticky: true,
+        sticky: true
       },
+      tofChoices: [
+        {value: true, text: 'TRUE'},
+        {value: false, text: 'FALSE'}
+      ]
     };
   },
   components: {
