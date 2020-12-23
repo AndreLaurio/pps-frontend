@@ -107,6 +107,19 @@
                                             
                                     </v-container>
                                     
+                                    <v-container v-if="item.question_type_code == 'TOF'">
+                                        <v-divider />
+
+                                        <v-select
+                                            v-model="item.tof_answer"
+                                            :items="trueOrFalseChoices"
+                                            item-value="value"
+                                            item-text="text"
+                                            label="Correct Answer"
+                                            small
+                                            outlined
+                                        />
+                                    </v-container>
                                 </v-card>
 
                                 
@@ -185,6 +198,10 @@ export default {
             message: 'sample',
             question_types: {},
             loadingUpdateEx:false,
+            trueOrFalseChoices: [
+                {'value': true, 'text': 'TRUE'},
+                {'value': false, 'text': 'FALSE'}
+            ]
         }
     },
     mounted(){
