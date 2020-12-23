@@ -25,8 +25,8 @@
         <v-card-title class="mt-5 pl-12">
           <h3 class="pop exam-warning">{{ exam.exam_title }}</h3>
         </v-card-title>
-        <v-card-text class="pl-12 mr-5">
-          <h3>{{ exam.exam_desc }}</h3>
+        <v-card-text class="pl-12 mr-5 exam-warning">
+          <h3 class="exam-warning">{{ exam.exam_desc }}</h3>
           <br />
           <div class="exam-warning">
             <b>Time Duration: </b>{{ exam.time_duration }} mins <br />
@@ -42,14 +42,18 @@
         <v-card-actions class="mr-5 mb-5">
           <v-spacer></v-spacer>
           <v-btn
-            class="primary red accent-4"
+            outlined
+            dark
+            class="primary rounded-lg"
             v-if="continue_exam == false"
             v-on:click="takeExam"
             :loading="loadingTake"
             >Take Exam</v-btn
           >
           <v-btn
-            class="primary red accent-4"
+            dark
+            outlined
+            class="primary rounded-lg"
             v-if="continue_exam == true"
             v-on:click="takeExam"
             :loading="loadingTake"
@@ -59,8 +63,10 @@
       </v-card>
 
       <v-container v-if="is_taking_exam == true && has_result == false">
-        <h2 class="pop exam-warning">{{ exam.exam_title }}</h2>
-
+        <h2 class="pop black--text">{{ exam.exam_title }}</h2>
+        <span class="black--text ml-5 text-md-body-1">{{
+          exam.exam_desc
+        }}</span>
         <v-banner
           single-line
           :sticky="timer.sticky"
@@ -152,7 +158,13 @@
 
           <v-dialog v-model="submitAnswerDialog" persistent max-width="290">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn class="primary red accent-4" dark v-bind="attrs" v-on="on">
+              <v-btn
+                outlined
+                class="primary rounded-lg"
+                dark
+                v-bind="attrs"
+                v-on="on"
+              >
                 Submit Answer
               </v-btn>
             </template>
@@ -207,6 +219,59 @@
           >
         </v-card-actions>
       </v-card>
+
+      <!-- button for chat -->
+      <div class="text-right mr-12">
+        <v-btn
+          outlined
+          dark
+          class="primary rounded-lg pl-12 pr-12"
+          @click="chatDialog = true"
+          >Chat</v-btn
+        >
+      </div>
+      <v-dialog v-model="chatDialog" persistent max-width="550">
+        <v-card class="font-body rounded-lg">
+          <v-card-title class="pl-8 pr-8 pt-8 justify-center">
+            Messages
+          </v-card-title>
+          <v-card-text>
+            <ul class="list-unstyled" style="height:300px; overflow-y:scroll">
+              <li class="p-2" v-for="message in messages" :key="message.id">
+                <strong class="indigo--text mr-1 text-md-body-1"
+                  >{{ message.first_name }} {{ message.last_name }} :
+                </strong>
+                <span class="black--text text-md-body-1">
+                  {{ message.message }}</span
+                >
+              </li>
+            </ul>
+            <v-text-field
+              v-model="newMessage"
+              outlined
+              dense
+              rounded
+              class="mt-5"
+              placeholder="Enter your Message"
+              v-on:keyup.enter="sendMessage"
+            ></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <div class="mb-2">
+              <v-btn
+                color="indigo"
+                outlined
+                @click="chatDialog = false"
+                class="text-uppercase rounded-lg"
+              >
+                Close
+              </v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- end for button chat -->
     </v-container>
 
     <v-main>
@@ -232,6 +297,7 @@
 import UserDashboard from "@/components/user/UserDashboard";
 import axios from "axios";
 import moment from "moment";
+import Echo from "laravel-echo";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
@@ -241,8 +307,11 @@ export default {
     return {
       submitAnswerDialog: false,
       user_id: "",
+      exam_id: "",
+      newMessage: "",
       exam: [],
       answers: [],
+      messages: [],
       message: "",
       is_taking_exam: false,
       answer: 0,
@@ -251,7 +320,7 @@ export default {
       loadingSubmit: false,
       interval: {},
       value: 0,
-
+      chatDialog: false,
       loadingPrint: false,
       has_result: false,
       result: {},
@@ -278,9 +347,15 @@ export default {
     UserDashboard,
   },
   mounted() {
-    this.loadData()
-    this.loadingButton()
-    this.changetab()
+    this.loadData();
+    this.loadingButton();
+    this.changetab();
+    // window.Echo.channel("chat." + this.room_id).listen("Messages", (event) =>
+    //   this.messages.push({
+    //     message: event.message.message,
+    //     user: event.user.last_name,
+    //   })
+    // );
   },
   // for loading button
   beforeDestroy() {
@@ -307,10 +382,14 @@ export default {
           if (response.data.session_exam_id != 0) {
             if (response.data.session_taken_on == null) {
               this.getExamDesc(response.data.session_exam_id);
+              this.exam_id = response.data.session_exam_id;
+              this.realTime(this.exam_id);
             } else {
               this.getExamDesc(response.data.session_exam_id);
               this.taking_exam_message = "You already taking this exam.";
               this.continue_exam = true;
+              this.exam_id = response.data.session_exam_id;
+              this.realTime(this.exam_id);
             }
           } else {
             this.message = "Please choose an exam to take.";
@@ -483,23 +562,52 @@ export default {
       return ("0" + n).slice(-2);
     },
     changetab() {
-        var self = this;
-        document.addEventListener("visibilitychange", function() {
-            if (document.hidden) {
-
-                axios.post('/api/exam/take/change-tab', {
-                    user_id: self.user_id,
-                    exam_id: self.exam.exam_id
-                }).then((response) => {
-                    
-                    console.log('change tab');
-
-                }).catch((error) => {
-                    console.log('Please contact the Administrator.')
-                })
-            }
+      var self = this;
+      document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+          axios
+            .post("/api/exam/take/change-tab", {
+              user_id: self.user_id,
+              exam_id: self.exam.exam_id,
+            })
+            .then((response) => {
+              console.log("change tab");
+            })
+            .catch((error) => {
+              console.log("Please contact the Administrator.");
+            });
+        }
+      });
+    },
+    getMessages() {
+      axios.get(`api/messages/${this.exam_id}`).then((response) => {
+        this.messages = response.data;
+      });
+    },
+    sendMessage() {
+      axios
+        .post("api/messages", {
+          user_id: this.user_id,
+          room_id: this.exam_id,
+          message: this.newMessage,
+        })
+        .then((response) => {
+          this.newMessage = "";
+        })
+        .catch((error) => {
+          console.log(this.user_id);
         });
-    }
-  }
+    },
+    realTime(exam_id) {
+      console.log(exam_id);
+      window.Echo.channel("chat" + exam_id).listen("Messages", (event) =>
+        this.messages.push({
+          message: event.message.message,
+          last_name: event.user.last_name,
+          first_name: event.user.first_name,
+        })
+      );
+    },
+  },
 };
 </script>

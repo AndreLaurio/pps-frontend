@@ -1,5 +1,47 @@
 <template>
   <div class="pop mt-5 ml-12">
+    <v-btn
+      outlined
+      dark
+      class="primary rounded-lg pl-12 pr-12"
+      @click="joinRoomDialog = true"
+      >Join Exam</v-btn
+    >
+    <!-- Join Exam pop up -->
+    <v-dialog v-model="joinRoomDialog" persistent max-width="550">
+      <v-card class="font-body rounded-lg">
+        <v-card-title class="pl-8 pr-8 pt-8 justify-center">
+          Enter Room Code
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+            prepend-inner-icon=""
+            clearable
+            v-model="exam_code"
+            outlined
+            class="ml-12 mr-12"
+          ></v-text-field>
+          <div class="text-right">
+            <v-btn
+              dark
+              outlined
+              @click="joinRoom"
+              class="primary mr-2 text-uppercase rounded-lg"
+            >
+              Join
+            </v-btn>
+            <v-btn
+              color="indigo"
+              outlined
+              @click="joinRoomDialog = false"
+              class="text-uppercase rounded-lg"
+            >
+              Close
+            </v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <div class="text-center mr-12">
       <v-progress-circular
         v-if="loading == true"
@@ -161,6 +203,8 @@ export default {
       message: "sample",
       loading: true,
       isEmpty: false,
+      joinRoomDialog: false,
+      exam_code: "",
       interval: {},
       value: 0,
       dialog: {
@@ -263,6 +307,19 @@ export default {
     },
     printExam() {
       console.log("print");
+    },
+    joinRoom() {
+      axios
+        .post("/api/exam/examinee/code/add", {
+          user_id: this.user_id,
+          exam_code: this.exam_code,
+        })
+        .then((response) => {
+          console.log("joined room successfully");
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        });
     },
   },
 };

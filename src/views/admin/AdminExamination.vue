@@ -74,7 +74,8 @@
           >
             <v-expansion-panel class="mt-3">
               <v-expansion-panel-header>
-                <h3 class="colored-title">{{ exam.exam_title }}</h3>
+                <h3 class="indigo--text">{{ exam.exam_title }}</h3>
+                <span> Room Code : {{ exam.exam_code }}</span>
                 <span class="text-right"
                   ><b>Last update: </b>{{ exam.updated_on_f }}</span
                 >
@@ -139,6 +140,15 @@
                   >
                     <v-icon left>mdi-folder-account</v-icon> View Results
                   </v-btn>
+                  <v-btn
+                    class="ma-2"
+                    outlined
+                    rounded
+                    color="indigo"
+                    @click="openChat(exam.exam_id)"
+                  >
+                    <v-icon left>mdi-chat</v-icon> View Chats
+                  </v-btn>
                 </v-container>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -190,6 +200,49 @@
         </v-dialog>
       </v-container>
     </v-layout>
+
+    <!-- chat dialog -->
+    <v-dialog v-model="chatDialog" persistent max-width="550">
+      <v-card class="font-body rounded-lg">
+        <v-card-title class="pl-8 pr-8 pt-8 justify-center">
+          Messages
+        </v-card-title>
+        <v-card-text>
+          <ul class="list-unstyled" style="height:300px; overflow-y:scroll">
+            <li class="p-2" v-for="message in messages" :key="message.id">
+              <strong class="indigo--text mr-1 text-md-body-1"
+                >{{ message.first_name }} {{ message.last_name }} :
+              </strong>
+              <span class="black--text text-md-body-1">
+                {{ message.message }}</span
+              >
+            </li>
+          </ul>
+          <v-text-field
+            v-model="newMessage"
+            outlined
+            dense
+            rounded
+            class="mt-5"
+            placeholder="Enter your Message"
+            v-on:keyup.enter="sendMessage"
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <div class="mb-2">
+            <v-btn
+              color="indigo"
+              outlined
+              @click="closeChat"
+              class="text-uppercase rounded-lg"
+            >
+              Close
+            </v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-main>
       <AdminDashboard />
     </v-main>
@@ -239,7 +292,11 @@ export default {
       exams: [],
       message: "",
       loading: true,
+      user_id: "",
       interval: {},
+      messages: [],
+      newMessage: "",
+      chatDialog: false,
       value: 0,
       pagination: {},
       delExamDialog: {
@@ -258,12 +315,23 @@ export default {
   mounted() {
     this.loadExams();
     this.loadingButton();
+    this.loadData();
   },
   // for loading button
   beforeDestroy() {
     clearInterval(this.interval);
   },
   methods: {
+    loadData() {
+      axios
+        .get("/api/user")
+        .then((response) => {
+          this.user_id = response.data.user_id;
+        })
+        .catch((error) => {
+          console.log("Call the Administrator.");
+        });
+    },
     createExamination() {
       this.$router.push({ name: "AdminCreateExamination" });
     },
@@ -377,6 +445,42 @@ export default {
         }
         this.value += 10;
       }, 1000);
+    },
+    openChat(exam_id) {
+      this.exam_id = exam_id;
+      this.chatDialog = true;
+      this.realTime();
+    },
+    getMessages() {
+      axios.get(`api/messages/${this.exam_id}`).then((response) => {
+        this.messages = response.data;
+      });
+    },
+    sendMessage() {
+      axios
+        .post("api/messages", {
+          user_id: this.user_id,
+          room_id: this.exam_id,
+          message: this.newMessage,
+        })
+        .then((response) => {
+          this.newMessage = "";
+        })
+        .catch((error) => {
+          console.log(this.user_id);
+        });
+    },
+    closeChat() {
+      this.chatDialog = false;
+    },
+    realTime() {
+      window.Echo.channel("chat" + this.exam_id).listen("Messages", (event) =>
+        this.messages.push({
+          message: event.message.message,
+          last_name: event.user.last_name,
+          first_name: event.user.first_name,
+        })
+      );
     },
   },
 };

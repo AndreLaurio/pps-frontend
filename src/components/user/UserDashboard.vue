@@ -25,30 +25,32 @@
             </div>
           </v-list-item-content>
         </v-list>
-        <v-list-item link v-on:click="userProfile">
-          <v-list-item-action>
-            <v-icon color="white">mdi-face</v-icon>
-          </v-list-item-action>
-          <v-list-item-content class="white--text">
-            Profile
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item link v-on:click="userExamination">
-          <v-list-item-action>
-            <v-icon color="white">mdi-clipboard-text-multiple</v-icon>
-          </v-list-item-action>
-          <v-list-item-content class="white--text">
-            Examination
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item link v-on:click="logout">
-          <v-list-item-action>
-            <v-icon color="white">mdi-logout</v-icon>
-          </v-list-item-action>
-          <v-list-item-content class="white--text">
-            Logout
-          </v-list-item-content>
-        </v-list-item>
+        <v-list-item-group active-class="white--text font-weight-bold">
+          <v-list-item link v-on:click="userProfile">
+            <v-list-item-action>
+              <v-icon color="white">mdi-face</v-icon>
+            </v-list-item-action>
+            <v-list-item-content class="white--text">
+              Profile
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item link v-on:click="userExamination">
+            <v-list-item-action>
+              <v-icon color="white">mdi-clipboard-text-multiple</v-icon>
+            </v-list-item-action>
+            <v-list-item-content class="white--text">
+              Examination
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item link v-on:click="logout">
+            <v-list-item-action>
+              <v-icon color="white">mdi-logout</v-icon>
+            </v-list-item-action>
+            <v-list-item-content class="white--text">
+              Logout
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
       </v-list>
       <template v-slot:append>
         <div class="pa-2 text-center mb-5">
