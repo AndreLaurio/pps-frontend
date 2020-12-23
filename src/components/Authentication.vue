@@ -285,7 +285,17 @@
     <v-dialog v-model="registerFailed" persistent max-width="550">
       <v-card class="font-body rounded-lg">
         <v-card-title class="pl-8 pr-8 pt-8 justify-center">
-          Registered failed please contact the administrator!
+          <div>
+            <ul>
+              <li
+                v-for="valErr in registerValidationError"
+                :key="valErr.id"
+                class="red--text"
+              >
+                {{ valErr }}
+              </li>
+            </ul>
+          </div>
         </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -423,6 +433,7 @@ export default {
       sentFailed: false,
       sentSuccessful: false,
       validationError: [],
+      registerValidationError: [],
     };
   },
   mounted() {
@@ -465,7 +476,6 @@ export default {
               validationErrors = validationErrors.flat();
               this.validationError = validationErrors;
               this.loginLoading = false;
-              console.log(error);
             });
         })
         .catch((error) => {
@@ -489,6 +499,9 @@ export default {
         })
         .catch((error) => {
           this.registerFailed = true;
+          let validationErrors = Object.values(error.response.data.errors);
+          validationErrors = validationErrors.flat();
+          this.registerValidationError = validationErrors;
         });
     },
     forgotPassword() {
