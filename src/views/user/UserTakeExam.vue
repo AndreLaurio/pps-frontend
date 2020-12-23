@@ -132,6 +132,16 @@
               </v-radio-group>
             </div>
 
+            <div v-if="item.question_type_code == 'FTQ'" class="ml-10">
+              <v-textarea
+                v-model="item.answer"
+                :counter="200"
+                outlined
+                placeholder="Please write your answer."
+                :rows="3"
+              />
+            </div>
+
             <div>
               <p class="exam-warning ml-10 mt-2" :id="`m-${item_no}`">
                 {{ exam.exam_items[item_no].message }}
@@ -506,6 +516,7 @@ export default {
     },
     printExam() {
       console.log("print");
+      window.print();
     },
     continueExam() {
       console.log("continue");
