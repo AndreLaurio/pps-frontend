@@ -139,6 +139,7 @@
         elevation="8"
         max-width="800"
         outlined
+        id="section-to-print"
       >
         <v-card-title class="mt-5 pl-12">
           <h3 class="pop exam-warning">Exam Result</h3>
@@ -153,16 +154,16 @@
             </p>
           </div>
         </v-card-text>
-        <v-card-actions class="mr-5 mb-5">
+        <v-card-actions class="mr-5 mb-5 no-to-print">
           <v-spacer></v-spacer>
           <v-btn
             dark
             outlined
-            class="primary rounded-lg"
+            class="primary rounded-lg no-to-print"
             v-on:click="result.show = false"
             >Back</v-btn
           >
-          <v-btn dark outlined class="primary rounded-lg" v-on:click="printExam"
+          <v-btn dark outlined class="primary rounded-lg no-to-print" v-on:click="printExam"
             >Print</v-btn
           >
         </v-card-actions>
@@ -185,6 +186,23 @@
 }
 .card-border {
   border: 3px solid #760d11;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print:not(.no-to-print), #section-to-print *:not(.no-to-print) {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    width: 100%;
+    left: -25%;
+  }
+  .no-to-print {
+    visibility: hidden;
+  }
 }
 </style>
 
@@ -306,7 +324,9 @@ export default {
         });
     },
     printExam() {
+      
       console.log("print");
+      window.print();
     },
     joinRoom() {
       axios

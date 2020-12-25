@@ -207,6 +207,7 @@
         max-width="800"
         outlined
         v-if="is_taking_exam == false && has_result == true"
+        id="section-to-print"
       >
         <v-card-title class="mt-5 pl-12">
           <h3 class="pop exam-warning">Exam Result</h3>
@@ -221,10 +222,10 @@
             </p>
           </div>
         </v-card-text>
-        <v-card-actions class="mr-5 mb-5">
+        <v-card-actions class="mr-5 mb-5 no-to-print">
           <v-spacer></v-spacer>
           <v-btn
-            class="primary red accent-4"
+            class="primary red accent-4 no-to-print"
             v-on:click="printExam"
             :loading="loadingPrint"
             >Print</v-btn
@@ -302,6 +303,23 @@
 }
 .card-border {
   border: 4px solid #760d11;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print:not(.no-to-print), #section-to-print *:not(.no-to-print) {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    width: 100%;
+    left: -25%;
+  }
+  .no-to-print {
+    visibility: hidden;
+  }
 }
 </style>
 
