@@ -100,7 +100,24 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
-        </v-dialog>
+          </v-dialog>
+
+          <br>
+
+          <download-excel
+            v-if="loading == false"
+            class="btn btn-default"
+            :data="examinees"
+            :fields="excelResultFields"
+            worksheet="Results"
+            :name="excelResultFileName"
+            :header="excelResultHeaders"
+          >
+            <v-btn class="mx-2 primary" small>
+              Export to Excel
+            </v-btn>
+          </download-excel>
+
         </div>
       </v-flex>
     </v-layout>
@@ -123,9 +140,13 @@
 <script>
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import axios from "axios";
+import Vue from "vue";
+import JsonExcel from "vue-json-excel";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
+
+Vue.component("downloadExcel", JsonExcel);
 
 export default {
   components: {
@@ -161,16 +182,100 @@ export default {
       changeTabHistoryHeaders:[
           {text: 'Date', align:'center'}
       ],
+      excelResultFileName: 'result.xls',
+      excelResultHeaders: [
+        'asdfs',
+        'name',
+        'date'
+      ],
+      excelResultFields: {
+        'Last Name': 'last_name',
+        'First Name': 'first_name',
+        'M.I.': {
+          field: "middle_name",
+          callback: (value) => {
+            return (value != '') ? value.charAt(0) : '';
+          }
+        },
+        'Email': 'email',
+        'Score': 'total_score',
+        'Remarks': 'exam_remarks',
+        'Change Tab Count': 'change_tab_count'
+      },
+      exam: {},
+      user: {},
+      json_meta: [
+        [
+          {
+            key: "charset",
+            value: "utf-8",
+          },
+        ],
+      ],
     }
   },
   mounted() {
     this.getExamExaminees();
     this.loadingButton();
+    this.initExcelFileName();
+    this.loadExamDesc();
+    this.getUserData();
   },
   beforeDestroy() {
     clearInterval(this.interval);
   },
   methods: {
+    getUserData() {
+      axios.get("/api/user").then((response) => {
+        this.user = response.data;
+        this.excelResultHeaders[1] = 'Examiner: ' + this.user.first_name + ' ' + this.user.last_name;
+      });
+    },
+    initExcelFileName() {
+      this.excelResultFileName = this.exam_title + ' - Results.xls';
+    },
+    loadExamDesc() {
+      axios
+        .get(`/api/exam/desc/${this.exam_id}`)
+        .then((response) => {
+          this.exam = response.data;
+          
+          // initialize data for excel
+          console.log(this.exam);
+          this.excelResultHeaders[0] = 'Title: ' + this.exam.exam_title;
+          this.excelResultHeaders[2] = 'Date Updated: ' + this.exam.updated_on
+          
+          
+          // this.erd= [
+          //   {
+          //     colA: 'Time Duration:',
+          //     colB: this.exam.time_duration + ' mins.',
+          //     colC: '',
+          //     colD: '', 
+          //     colE: '',
+          //     colF: 'Exam Code:',
+          //     colG: this.exam.exam_code
+          //   },
+          //   {
+          //     colA: 'Passing Score',
+          //     colb: this.exam.passing_score + '/' + this.exam.total_score,
+          //     colC: '',
+          //     colD: '', 
+          //     colE: '',
+          //     colF: 'Date:',
+          //     colG: ''
+
+          //   },
+          //   {
+          //     colA: 'No. of Questions: ',
+          //     colb: this.exam.total_num_questions
+          //   }
+          // ];
+
+        }).catch((error) => {
+          console.log("Please call the Administrator.");
+        });
+    },
     getExamExaminees() {
       if (this.exam_id == 0) {
         this.$router.push({ name: "AdminExamination" });
