@@ -56,7 +56,19 @@
                   >
                 </td>
                 <td class="text-center">
-                    <v-btn v-if="examinee.item.exam_status_code != 'N'" class="mx-2 default" small @click="viewChangeTabHistory(examinee.item.user_id, examinee.item.exam_id)"><v-icon>mdi-eye</v-icon> Count: {{examinee.item.change_tab_count}}</v-btn>
+                  <v-btn
+                    v-if="examinee.item.exam_status_code != 'N'"
+                    class="mx-2 default"
+                    small
+                    @click="
+                      viewChangeTabHistory(
+                        examinee.item.user_id,
+                        examinee.item.exam_id
+                      )
+                    "
+                    ><v-icon>mdi-eye</v-icon> Count:
+                    {{ examinee.item.change_tab_count }}</v-btn
+                  >
                 </td>
               </tr>
             </template>
@@ -64,45 +76,42 @@
 
           <v-dialog v-model="changeTabHistoryDialog" persistent max-width="550">
             <v-card class="font-body">
-                <v-card-title class="pl-8 pr-8 pt-8 justify-center">
-                    <span class="text-center text-uppercase register-title"
-                        >Change Tab Hisory</span
-                    >
-                </v-card-title>
-                <v-card-text>
-                    
-                    <v-data-table
-                        :headers="changeTabHistoryHeaders"
-                        :items="changeTabs"
-                        class="elevation-1"
-                    >
-                        <template v-slot:item="changeTab">
-                            <tr>
-                                <td>
-                                    <center>{{changeTab.item.change_tab_date}}</center>
-                                </td>
-                            </tr>
-                        </template>
-                    </v-data-table>
-                    
+              <v-card-title class="pl-8 pr-8 pt-8 justify-center">
+                <span class="text-center text-uppercase register-title"
+                  >Change Tab Hisory</span
+                >
+              </v-card-title>
+              <v-card-text>
+                <v-data-table
+                  :headers="changeTabHistoryHeaders"
+                  :items="changeTabs"
+                  class="elevation-1"
+                >
+                  <template v-slot:item="changeTab">
+                    <tr>
+                      <td>
+                        <center>{{ changeTab.item.change_tab_date }}</center>
+                      </td>
+                    </tr>
+                  </template>
+                </v-data-table>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
 
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    
-                    <v-btn
-                        color="red darken-1"
-                        text
-                        @click="changeTabHistoryDialog = false"
-                        class="text-uppercase"
-                    >
-                        Close
-                    </v-btn>
-                </v-card-actions>
+                <v-btn
+                  color="red darken-1"
+                  text
+                  @click="changeTabHistoryDialog = false"
+                  class="text-uppercase"
+                >
+                  Close
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-dialog>
 
-          <br>
+          <br />
 
           <download-excel
             v-if="loading == false"
@@ -117,7 +126,6 @@
               Export to Excel
             </v-btn>
           </download-excel>
-
         </div>
       </v-flex>
     </v-layout>
@@ -175,32 +183,26 @@ export default {
         { text: "Score", align: "center" },
         { text: "Remarks", align: "center" },
         { text: "Actions", align: "center" },
-        {text: 'Change Tab', align: 'center'}
+        { text: "Change Tab", align: "center" },
       ],
       changeTabHistoryDialog: false,
       changeTabs: [],
-      changeTabHistoryHeaders:[
-          {text: 'Date', align:'center'}
-      ],
-      excelResultFileName: 'result.xls',
-      excelResultHeaders: [
-        'asdfs',
-        'name',
-        'date'
-      ],
+      changeTabHistoryHeaders: [{ text: "Date", align: "center" }],
+      excelResultFileName: "result.xls",
+      excelResultHeaders: ["asdfs", "name", "date"],
       excelResultFields: {
-        'Last Name': 'last_name',
-        'First Name': 'first_name',
-        'M.I.': {
+        "Last Name": "last_name",
+        "First Name": "first_name",
+        "M.I.": {
           field: "middle_name",
           callback: (value) => {
-            return (value != '') ? value.charAt(0) : '';
-          }
+            return value != "" ? value.charAt(0) : "";
+          },
         },
-        'Email': 'email',
-        'Score': 'total_score',
-        'Remarks': 'exam_remarks',
-        'Change Tab Count': 'change_tab_count'
+        Email: "email",
+        Score: "overall_score",
+        Remarks: "exam_remarks",
+        "Change Tab Count": "change_tab_count",
       },
       exam: {},
       user: {},
@@ -212,7 +214,7 @@ export default {
           },
         ],
       ],
-    }
+    };
   },
   mounted() {
     this.getExamExaminees();
@@ -228,30 +230,30 @@ export default {
     getUserData() {
       axios.get("/api/user").then((response) => {
         this.user = response.data;
-        this.excelResultHeaders[1] = 'Examiner: ' + this.user.first_name + ' ' + this.user.last_name;
+        this.excelResultHeaders[1] =
+          "Examiner: " + this.user.first_name + " " + this.user.last_name;
       });
     },
     initExcelFileName() {
-      this.excelResultFileName = this.exam_title + ' - Results.xls';
+      this.excelResultFileName = this.exam_title + " - Results.xls";
     },
     loadExamDesc() {
       axios
         .get(`/api/exam/desc/${this.exam_id}`)
         .then((response) => {
           this.exam = response.data;
-          
+
           // initialize data for excel
           console.log(this.exam);
-          this.excelResultHeaders[0] = 'Title: ' + this.exam.exam_title;
-          this.excelResultHeaders[2] = 'Date Updated: ' + this.exam.updated_on
-          
-          
+          this.excelResultHeaders[0] = "Title: " + this.exam.exam_title;
+          this.excelResultHeaders[2] = "Date Updated: " + this.exam.updated_on;
+
           // this.erd= [
           //   {
           //     colA: 'Time Duration:',
           //     colB: this.exam.time_duration + ' mins.',
           //     colC: '',
-          //     colD: '', 
+          //     colD: '',
           //     colE: '',
           //     colF: 'Exam Code:',
           //     colG: this.exam.exam_code
@@ -260,7 +262,7 @@ export default {
           //     colA: 'Passing Score',
           //     colb: this.exam.passing_score + '/' + this.exam.total_score,
           //     colC: '',
-          //     colD: '', 
+          //     colD: '',
           //     colE: '',
           //     colF: 'Date:',
           //     colG: ''
@@ -271,8 +273,8 @@ export default {
           //     colb: this.exam.total_num_questions
           //   }
           // ];
-
-        }).catch((error) => {
+        })
+        .catch((error) => {
           console.log("Please call the Administrator.");
         });
     },
@@ -312,21 +314,22 @@ export default {
       }, 1000);
     },
     viewChangeTabHistory(user_id, exam_id) {
-        console.log('clicked');
-        axios.post('/api/exam/examinee/change-tab-history/get', {
-            user_id: user_id,
-            exam_id: exam_id
-        }).then((response) => {
-            
-            this.changeTabs = response.data;
-            this.changeTabHistoryDialog = true;
-            console.log('succ');
-
-        }).catch((error) => {
-            console.log('Please contact the Administrator.');
-            console.log('faliled');
+      console.log("clicked");
+      axios
+        .post("/api/exam/examinee/change-tab-history/get", {
+          user_id: user_id,
+          exam_id: exam_id,
         })
-    }
-  }
-}
+        .then((response) => {
+          this.changeTabs = response.data;
+          this.changeTabHistoryDialog = true;
+          console.log("succ");
+        })
+        .catch((error) => {
+          console.log("Please contact the Administrator.");
+          console.log("faliled");
+        });
+    },
+  },
+};
 </script>
