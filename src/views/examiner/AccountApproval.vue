@@ -84,7 +84,7 @@
 </style>
 
 <script>
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminDashboard from "@/components/admin/Dashboard";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;

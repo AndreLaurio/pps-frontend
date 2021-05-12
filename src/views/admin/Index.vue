@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import AdminHome from '@/components/admin/AdminHome'
-import AdminDashboard from '@/components/admin/AdminDashboard'
+import AdminHome from '@/components/admin/Home'
+import AdminDashboard from '@/components/admin/Dashboard'
 
 export default {
     data(){

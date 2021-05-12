@@ -171,7 +171,7 @@
     </v-layout>
 
     <v-main>
-      <UserDashboard />
+      <ExamineeDashboard />
     </v-main>
   </div>
 </template>
@@ -207,7 +207,7 @@
 </style>
 
 <script>
-import UserDashboard from "@/components/user/UserDashboard";
+import ExamineeDashboard from "@/components/examinee/Dashboard";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -238,7 +238,7 @@ export default {
     };
   },
   components: {
-    UserDashboard,
+    ExamineeDashboard,
   },
   mounted() {
     this.load(), this.loadingButton();
@@ -285,7 +285,7 @@ export default {
         })
         .then((response) => {
           if (response.data.status == "success") {
-            this.$router.push({ name: "UserTakeExam" });
+            this.$router.push({ name: "ExamineeTakeExam" });
           } else if (response.data.status == "error") {
             this.dialog.title = "Examination Dialog";
             this.dialog.message = response.data.message;

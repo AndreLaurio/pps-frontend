@@ -144,7 +144,7 @@
         </v-layout>
 
         <v-main>
-            <AdminDashboard/>
+            <ExaminerDashboard/>
         </v-main>
     </div>
 </template>
@@ -164,7 +164,7 @@
 </style>
 
 <script>
-import AdminDashboard from '@/components/admin/AdminDashboard'
+import ExaminerDashboard from '@/components/examiner/Dashboard'
 import axios from 'axios'
 
 import _ from 'lodash'
@@ -175,7 +175,7 @@ axios.defaults.baseURL = 'http://localhost:8000'
 
 export default {
     components:{
-        AdminDashboard
+        ExaminerDashboard
     },
     props: {
         exam_id: {
@@ -211,7 +211,7 @@ export default {
         loadExam() {
 
             if (this.exam_id == 0) {
-                this.$router.push({ name: 'AdminExamination' })
+                this.$router.push({ name: 'ExaminerExamination' })
             }
             else {
                 axios.post('/api/exam/edit/get', {
@@ -261,7 +261,7 @@ export default {
             axios.post('/api/exam/edit', this.exam).then((response) => {
                 this.loadingUpdateEx = false
                 this.$router.push({ 
-                    name: 'AdminExamination',
+                    name: 'ExaminerExamination',
                     params: {
                         'success': 'The exam is successfully updated.'
                     }

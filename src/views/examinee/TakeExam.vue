@@ -288,7 +288,7 @@
     </v-container>
 
     <v-main>
-      <UserDashboard />
+      <ExamineeDashboard />
     </v-main>
   </div>
 </template>
@@ -324,7 +324,7 @@
 </style>
 
 <script>
-import UserDashboard from "@/components/user/UserDashboard";
+import ExamineeDashboard from "@/components/examinee/Dashboard";
 import axios from "axios";
 import moment from "moment";
 import Echo from "laravel-echo";
@@ -378,7 +378,7 @@ export default {
     };
   },
   components: {
-    UserDashboard,
+    ExamineeDashboard,
   },
   mounted() {
     this.loadData();

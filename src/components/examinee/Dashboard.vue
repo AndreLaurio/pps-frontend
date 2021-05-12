@@ -26,7 +26,7 @@
           </v-list-item-content>
         </v-list>
         <v-list-item-group active-class="white--text font-weight-bold">
-          <v-list-item link v-on:click="userProfile">
+          <v-list-item link v-on:click="examineeProfile">
             <v-list-item-action>
               <v-icon color="white">mdi-face</v-icon>
             </v-list-item-action>
@@ -34,7 +34,7 @@
               Profile
             </v-list-item-content>
           </v-list-item>
-          <v-list-item link v-on:click="userExamination">
+          <v-list-item link v-on:click="examineeExamination">
             <v-list-item-action>
               <v-icon color="white">mdi-clipboard-text-multiple</v-icon>
             </v-list-item-action>
@@ -110,11 +110,11 @@ export default {
         this.$router.push({ name: "Home" });
       });
     },
-    userExamination() {
-      this.$router.push({ name: "UserExamination" });
+    examineeExamination() {
+      this.$router.push({ name: "ExamineeExamination" });
     },
-    userProfile() {
-      this.$router.push({ name: "UserProfile" });
+    examineeProfile() {
+      this.$router.push({ name: "ExamineeProfile" });
     },
   },
 };

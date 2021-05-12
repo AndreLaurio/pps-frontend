@@ -244,7 +244,7 @@
       </v-card>
     </v-dialog>
     <v-main>
-      <AdminDashboard />
+      <ExaminerDashboard />
     </v-main>
   </div>
 </template>
@@ -271,7 +271,7 @@
 </style>
 
 <script>
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import ExaminerDashboard from "@/components/examiner/Dashboard";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -279,7 +279,7 @@ axios.defaults.baseURL = "http://localhost:8000";
 
 export default {
   components: {
-    AdminDashboard,
+    ExaminerDashboard,
   },
   props: {
     success: {
@@ -333,7 +333,7 @@ export default {
         });
     },
     createExamination() {
-      this.$router.push({ name: "AdminCreateExamination" });
+      this.$router.push({ name: "ExaminerCreateExamination" });
     },
     loadExams(page_url) {
       let main_url = "/api/exams";
@@ -362,7 +362,7 @@ export default {
     },
     manageExaminees(exam_id, exam_title) {
       this.$router.push({
-        name: "AdminManageExaminees",
+        name: "ExaminerManageExaminees",
         params: {
           exam_id: exam_id,
           exam_title: exam_title,
@@ -371,7 +371,7 @@ export default {
     },
     viewResults(exam_id, exam_title) {
       this.$router.push({
-        name: "AdminViewResults",
+        name: "ExaminerViewResults",
         params: {
           exam_id: exam_id,
           exam_title: exam_title,
@@ -424,7 +424,7 @@ export default {
     },
     editExam() {
       this.$router.push({
-        name: "AdminEditExam",
+        name: "ExaminerEditExam",
         params: {
           exam_id: this.editExamDialog.exam_id,
         },
@@ -432,7 +432,7 @@ export default {
     },
     viewExam(exam_id) {
       this.$router.push({
-        name: "AdminViewExam",
+        name: "ExaminerViewExam",
         params: {
           exam_id: exam_id,
         },

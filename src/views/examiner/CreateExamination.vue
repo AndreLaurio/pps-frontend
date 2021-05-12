@@ -223,7 +223,7 @@
     </v-layout>
 
     <v-main>
-      <AdminDashboard />
+      <ExaminerDashboard />
     </v-main>
   </div>
 </template>
@@ -243,7 +243,7 @@
 </style>
 
 <script>
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import ExaminerDashboard from "@/components/examiner/Dashboard";
 import axios from "axios";
 
 import _ from "lodash";
@@ -253,7 +253,7 @@ axios.defaults.baseURL = "http://localhost:8000";
 
 export default {
   components: {
-    AdminDashboard,
+    ExaminerDashboard,
   },
   data() {
     return {
@@ -325,7 +325,7 @@ export default {
         .then((response) => {
           this.loadingAddEx = false;
           this.$router.push({
-            name: "AdminExamination",
+            name: "ExaminerExamination",
             params: {
               success: "The exam is successfully created.",
             },

@@ -9,11 +9,6 @@
                         <v-card-text class="text-center">
                             <h1 class="white--text"> {{userData.first_name}} {{userData.last_name}} </h1> 
                         </v-card-text>
-                        <v-card-actions class="justify-center mt-3">
-                            <v-btn v-on:click="createUser" class="mb-5 primary red accent-4"> Create User </v-btn>
-                            <v-btn v-on:click="accountApproval" class="mb-5 primary red accent-4"> Acct Approval </v-btn>
-                            <v-btn v-on:click="createExam" class="mb-5 primary red accent-4"> Create Exam </v-btn>
-                        </v-card-actions>
                  </v-card>
             </v-flex>
         </v-layout>
@@ -55,15 +50,6 @@ export default {
                 this.userData.first_name = response.data.first_name,
                 this.userData.last_name = response.data.last_name
             })
-        },
-        createUser(){
-            this.$router.push({ name: 'AdminCreateUser' })
-        },
-        accountApproval(){
-            this.$router.push({ name: 'AdminAccountApproval' })
-        },
-        createExam(){
-            this.$router.push({ name: 'AdminExamination' })
         },
         logout(){
             axios.post('/logout').then(response => {

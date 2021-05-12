@@ -130,7 +130,7 @@
       </v-flex>
     </v-layout>
     <v-main>
-      <AdminDashboard />
+      <ExaminerDashboard />
     </v-main>
   </div>
 </template>
@@ -146,7 +146,7 @@
 </style>
 
 <script>
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import ExaminerDashboard from "@/components/examiner/Dashboard";
 import axios from "axios";
 import Vue from "vue";
 import JsonExcel from "vue-json-excel";
@@ -158,7 +158,7 @@ Vue.component("downloadExcel", JsonExcel);
 
 export default {
   components: {
-    AdminDashboard,
+    ExaminerDashboard,
   },
   props: {
     exam_id: {
@@ -280,7 +280,7 @@ export default {
     },
     getExamExaminees() {
       if (this.exam_id == 0) {
-        this.$router.push({ name: "AdminExamination" });
+        this.$router.push({ name: "ExaminerExamination" });
       } else {
         axios
           .post("/api/exam/results", {
@@ -289,6 +289,7 @@ export default {
           .then((response) => {
             this.loading = false;
             this.examinees = response.data;
+            console.log('examinees')
             console.log(this.examinees);
             // }).catch((error) => {
             console.log("Please call the Administrator.");
@@ -297,7 +298,7 @@ export default {
     },
     viewAnswer(user_id) {
       this.$router.push({
-        name: "AdminViewAnswer",
+        name: "ExaminerViewAnswer",
         params: {
           exam_id: this.exam_id,
           exam_title: this.exam_title,

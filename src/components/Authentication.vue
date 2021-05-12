@@ -454,21 +454,27 @@ export default {
               axios.get("api/user").then((response) => {
                 let is_approved = response.data.is_approved;
                 var userType = response.data.user_type_id;
-                console.log(is_approved);
-                if (userType == 2) {
+                
+                if (userType == 1) {
+                  this.$router.push({
+                    name: "AdminManageUsers",
+                  });
+                }
+                else if(userType == 2) {
+                  this.$router.push({
+                    name: "ExaminerExamination"
+                  })
+                }
+                else if (userType == 3) {
                   if (is_approved == 1) {
                     this.$router.push({
-                      name: "UserExamination",
+                      name: "ExamineeExamination",
                     });
                   } else {
                     this.loginLoading = false;
                     this.waitingError = "Waiting for Approval";
                   }
-                } else if (userType == 1) {
-                  this.$router.push({
-                    name: "AdminExamination",
-                  });
-                }
+                } 
               });
             })
             .catch((error) => {

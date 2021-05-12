@@ -2,16 +2,16 @@
   <div class="pop">
     <v-layout justify-center>
       <v-flex xs12 md6>
-        <v-card class="mx-auto rounded-xl mt-5" max-width="500">
+        <v-card class="mx-auto rounded-xl mt-5" max-width="500" v-if="method == 'CREATE'">
           <v-card-title>
             <h3 class="indigo--text mt-5 ml-5">Create Users</h3>
           </v-card-title>
           <v-card-text class="pl-12 pr-12">
             <div class="valsuccess">{{ register_validation_success }}</div>
             <v-radio-group v-model="register_data.user_type_id" row>
-              <v-radio color="indigo" label="Admin" value="1"></v-radio>
+              <v-radio color="indigo" label="Examiner" value="2"></v-radio>
               <v-spacer></v-spacer>
-              <v-radio color="indigo" label="User" value="2"></v-radio>
+              <v-radio color="indigo" label="Examinee" value="3"></v-radio>
             </v-radio-group>
             <v-text-field
               v-model="register_data.first_name"
@@ -66,6 +66,72 @@
             >
           </v-card-actions>
         </v-card>
+
+
+        <v-card class="mx-auto rounded-xl mt-5" max-width="500" v-else-if="method == 'EDIT'">
+          <v-card-title>
+            <h3 class="indigo--text mt-5 ml-5">Edit User</h3>
+          </v-card-title>
+          <v-card-text class="pl-12 pr-12">
+            <div class="valsuccess">{{ editUser.success }}</div>
+            <v-radio-group v-model="user.user_type_id" row>
+              <v-radio 
+                v-for="ut in user_types" 
+                :key="ut.user_type_id"
+                color="indigo" 
+                :label="ut.user_type" 
+                :value="ut.user_type_id"
+              ></v-radio> 
+            </v-radio-group>
+            <v-text-field
+              v-model="user.first_name"
+              :counter="15"
+              outlined
+              label="First Name"
+            ></v-text-field>
+            <v-text-field
+              v-model="user.last_name"
+              :counter="15"
+              outlined
+              label="Surname"
+            ></v-text-field>
+            <v-text-field
+              v-model="user.email"
+              label="Email"
+              outlined
+              :rules="emailRules"
+              :counter="30"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="user.password"
+              v-on:keyup.enter="register"
+              label="Password"
+              outlined
+              :rules="[rules.min]"
+              counter
+              hint="At least 8 characters"
+              :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show_password ? 'text' : 'password'"
+              @click:append="show_password = !show_password"
+            ></v-text-field>
+            <span class="red--text">* If you don't want to update the password, leave it empty</span>
+            <div class="valerror text-center">
+              <span class="red--text"> {{ editUser.error }} </span>
+            </div>
+          </v-card-text>
+          <v-card-actions class="justify-center">
+            <v-btn
+              v-on:click="update()"
+              :loading="editUser.loading"
+              dark
+              outlined
+              class="pl-12 pr-12 mb-8 primary"
+            >
+              Update</v-btn
+            >
+          </v-card-actions>
+        </v-card>
       </v-flex>
     </v-layout>
     <v-main>
@@ -94,7 +160,7 @@ ul {
 </style>
 
 <script>
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminDashboard from "@/components/admin/Dashboard";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -122,10 +188,33 @@ export default {
       register_validation_success: "",
       register_validation_failed: [],
       registerLoading: false,
+
+      editUser: {
+        success: '',
+        error: '',
+        loading: false,
+      },
+      user_types: [
+        {'user_type_id': 2, 'user_type': 'Examiner'},
+        {'user_type_id': 3, 'user_type': 'Examinee'},
+      ],
     };
+  },
+  props: {
+    method: {
+      type: String,
+      default: 'CREATE',
+    },
+    user: {
+      type: Object,
+      default: {}
+    }
   },
   components: {
     AdminDashboard,
+  },
+  mounted() {
+    this.loadUser()
   },
   methods: {
     register() {
@@ -155,6 +244,32 @@ export default {
           this.register_validation_failed = valErr;
         });
     },
+    loadUser() {
+      console.log('loadUser')
+      console.log(this.method)
+      console.log(this.user)
+      this.user.password = ''
+    },
+    update() {
+      this.editUser.success = ''
+      this.editUser.error = ''
+      this.editUser.loading = true
+
+      axios
+        .patch(`api/users/${this.user.user_id}`, this.user)
+        .then(response => {
+            if(response.data.code == 200) {
+                this.editUser.success = response.data.message
+            }
+        })
+        .catch(error => {
+            console.log('error.response.data')
+            this.editUser.error = error.response.data.message
+        })
+        .finally(() => {
+            this.editUser.loading = false
+        })
+    }
   },
 };
 </script>

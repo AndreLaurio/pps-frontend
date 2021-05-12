@@ -2,17 +2,17 @@
     <div>
         <h1>AdminExaminees</h1>
         <v-main>
-            <AdminDashboard/>
+            <ExaminerDashboard/>
         </v-main>
     </div>
 </template>
 
 <script>
-import AdminDashboard from '@/components/admin/AdminDashboard'
+import ExaminerDashboard from '@/components/examiner/Dashboard'
 
 export default {
     components:{
-        AdminDashboard
+        ExaminerDashboard
     }
 }
 </script>

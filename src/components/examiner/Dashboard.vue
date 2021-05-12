@@ -24,7 +24,7 @@
                         Home
                     </v-list-item-content>
                 </v-list-item>
-                 <v-list-item link v-on:click="adminExaminees">
+                 <v-list-item link v-on:click="examinerExaminees">
                     <v-list-item-action>
                         <v-icon color="#760D11">mdi-account-supervisor</v-icon>
                     </v-list-item-action>
@@ -32,28 +32,12 @@
                         Examinees
                     </v-list-item-content>
                 </v-list-item> -->
-        <v-list-item link v-on:click="adminExamination">
+        <v-list-item link v-on:click="examination">
           <v-list-item-action>
             <v-icon color="white">mdi-clipboard-text-multiple</v-icon>
           </v-list-item-action>
           <v-list-item-content class="white--text">
             Examinations
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item link v-on:click="accountApproval">
-          <v-list-item-action>
-            <v-icon color="white">mdi-account-supervisor-circle-outline</v-icon>
-          </v-list-item-action>
-          <v-list-item-content class="white--text">
-            Account Approval
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item link v-on:click="createUser">
-          <v-list-item-action>
-            <v-icon color="white">mdi-account-plus</v-icon>
-          </v-list-item-action>
-          <v-list-item-content class="white--text">
-            Create User
           </v-list-item-content>
         </v-list-item>
         <v-list-item link v-on:click="logout">
@@ -115,14 +99,8 @@ export default {
           (this.userData.last_name = response.data.last_name);
       });
     },
-    createUser() {
-      this.$router.push({ name: "AdminCreateUser" });
-    },
-    accountApproval() {
-      this.$router.push({ name: "AdminAccountApproval" });
-    },
-    adminExamination() {
-      this.$router.push({ name: "AdminExamination" });
+    createExaminee() {
+      this.$router.push({ name: "ExaminerCreateExaminee" });
     },
     logout() {
       axios.post("/logout").then((response) => {

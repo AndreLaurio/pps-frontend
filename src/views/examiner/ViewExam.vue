@@ -127,7 +127,7 @@
     </v-container>
 
     <v-main>
-      <AdminDashboard />
+      <ExaminerDashboard />
     </v-main>
   </div>
 </template>
@@ -146,7 +146,7 @@
 </style>
 
 <script>
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import ExaminerDashboard from "@/components/examiner/Dashboard";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -172,7 +172,7 @@ export default {
     },
   },
   components: {
-    AdminDashboard,
+    ExaminerDashboard,
   },
   mounted() {
     this.loadData();
@@ -185,7 +185,7 @@ export default {
   methods: {
     loadData() {
       if (this.exam_id == 0) {
-        this.$router.push({ name: "AdminExamination" });
+        this.$router.push({ name: "ExaminerExamination" });
       } else {
         axios
           .get(`/api/exam/${this.exam_id}`)
@@ -220,7 +220,7 @@ export default {
       }
     },
     back() {
-      this.$router.push({ name: "AdminExamination" });
+      this.$router.push({ name: "ExaminerExamination" });
     },
     loadingButton() {
       this.interval = setInterval(() => {

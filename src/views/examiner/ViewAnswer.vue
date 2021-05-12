@@ -69,6 +69,8 @@
                   :value="choice.choice_no"
                   :label="choice.label"
                   disabled
+                  :class="(choice.is_correct) ? 'correct' : 
+                    ((item.answer == choice.choice_no) ? 'wrong' : '') "
                 ></v-radio>
               </v-radio-group>
             </div>
@@ -82,6 +84,8 @@
                   color="red darken-3"
                   hide-details
                   disabled
+                  :class="(choice.is_correct) ? 'correct' : 
+                    ((choice.is_selected) ? 'wrong' : '') "
                 >
                 </v-checkbox>
               </div>
@@ -107,7 +111,12 @@
                   :value="choice.value"
                   :label="choice.text"
                   readonly
-                ></v-radio>
+                  :class="(choice.is_correct) ? 'correct' : 
+                    ((item.answer == choice.choice_no) ? 'wrong' : '') "
+                >
+                  <v-icon color="green">mdi-check</v-icon>
+                </v-radio>
+                            
               </v-radio-group>
             </div>
 
@@ -128,7 +137,7 @@
     </v-container>
 
     <v-main>
-      <AdminDashboard />
+      <ExaminerDashboard />
     </v-main>
   </div>
 </template>
@@ -144,10 +153,17 @@
 .card-border {
   border: 3px solid #760d11;
 }
+.correct {
+  border-left: 4px solid green;
+}
+.wrong {
+  border: 1px solid red;
+  border-left: 4px solid red;
+}
 </style>
 
 <script>
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import ExaminerDashboard from "@/components/examiner/Dashboard";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -182,7 +198,7 @@ export default {
     }
   },
   components: {
-    AdminDashboard,
+    ExaminerDashboard,
   },
   mounted() {
     this.loadData();
@@ -196,7 +212,7 @@ export default {
     loadData() {
       if (this.user_id == 0) {
         this.$router.push({
-          name: "AdminViewResults",
+          name: "ExaminerViewResults",
           params: {
             exam_id: this.exam_id,
             exam_title: this.exam_title,
@@ -220,7 +236,7 @@ export default {
     },
     back() {
       this.$router.push({
-        name: "AdminExamination",
+        name: "ExaminerExamination",
         params: {
           exam_id: this.exam_id,
           exam_title: this.exam_title,
