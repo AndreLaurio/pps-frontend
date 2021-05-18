@@ -5,7 +5,7 @@ import Home from "../views/Home";
 //Examinee
 import Examinee from "../views/examinee/Index";
 import ExamineeExamination from "../views/examinee/Examination";
-import ExamineeProfile from "../components/Profile";
+import ExamineeProfile from "../views/examinee/Profile";
 import ExamineeTakeExam from "../views/examinee/TakeExam";
 
 //Examiner

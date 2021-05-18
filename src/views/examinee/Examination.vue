@@ -336,6 +336,9 @@ export default {
         })
         .then((response) => {
           console.log("joined room successfully");
+          this.loading = true
+          this.loadExams()
+          this.joinRoomDialog = false
         })
         .catch((error) => {
           console.log(error.response.data);
